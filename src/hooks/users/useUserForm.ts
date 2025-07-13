@@ -1,91 +1,81 @@
 import { useState, useEffect } from "react";
-import { UserSchema, type User } from "@/types/user";
+import { type User } from "@/types/user";
 import type { CreateData } from "../shared/useApi";
-
-type FormData = Omit<User, "id" | "createdAt" | "updatedAt">;
+import {
+  type FormData,
+  type FormMode,
+  getInitialFormData,
+  userToFormData,
+  validateField,
+  validateForm,
+  isFormValid,
+  prepareSubmitData,
+} from "@/utils/userFormValidation";
 
 interface UseUserFormProps {
-  mode: "create" | "edit";
+  mode: FormMode;
   user?: User | null;
   onSubmit: (data: CreateData<User>) => Promise<void>;
 }
 
 export const useUserForm = ({ mode, user, onSubmit }: UseUserFormProps) => {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    password: "",
-    role: "user",
-    active: true,
-    location: { latitude: 39.9334, longitude: 32.8597 },
-  });
-
+  const [formData, setFormData] = useState<FormData>(getInitialFormData());
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (user) {
-      setFormData({ ...user, password: "" });
+      setFormData(userToFormData(user));
     } else {
-      // Reset form when no user (create mode)
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        role: "user",
-        active: true,
-        location: { latitude: 39.9334, longitude: 32.8597 },
-      });
+      setFormData(getInitialFormData());
     }
     setErrors({});
+    setTouched({});
   }, [user, mode]);
 
-  const updateField = (
-    name: keyof FormData,
-    value: FormData[keyof FormData]
-  ) => {
+  const updateField = (name: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const blurField = (name: keyof FormData) => {
-    try {
-      if (mode === "edit" && name === "password" && !formData.password) return;
+    setTouched((prev) => ({ ...prev, [name]: true }));
 
-      const schema = UserSchema.omit({
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-      });
-      schema.shape[name].parse(formData[name]);
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    } catch (error) {
-      if (error instanceof Error) {
-        setErrors((prev) => ({ ...prev, [name]: error.message }));
-      }
-    }
+    const fieldError = validateField(name, formData[name], mode);
+    setErrors((prev) => ({ ...prev, [name]: fieldError || "" }));
   };
 
   const handleSubmit = async () => {
+    const allTouched = Object.keys(formData).reduce(
+      (acc, key) => ({ ...acc, [key]: true }),
+      {}
+    );
+    setTouched(allTouched);
+
+    const formErrors = validateForm(formData, mode);
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     try {
-      await onSubmit(formData);
+      const submitData = prepareSubmitData(formData, mode);
+      await onSubmit(submitData);
     } catch (error) {
       setErrors({ submit: "Failed to save user" });
       throw error;
     }
   };
 
-  const isValid =
-    !Object.values(errors).some(Boolean) &&
-    formData.name &&
-    formData.email &&
-    (mode === "edit" || formData.password);
-
   return {
     formData,
     errors,
-    isValid,
+    touched,
+    isValid: isFormValid(formData, mode, errors),
     updateField,
     blurField,
     handleSubmit,

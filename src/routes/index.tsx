@@ -8,6 +8,7 @@ import { Header } from "@/components/shared/header";
 import { Icon } from "@/components/shared/Icon";
 import { ActionButton } from "@/components/shared/button";
 import { UserModal } from "@/components/user/modal";
+import { useUserModal } from "@/hooks/users/useUserModal";
 
 export const Route = createFileRoute("/")({
   component: UsersPage,
@@ -16,17 +17,14 @@ export const Route = createFileRoute("/")({
 export default function UsersPage() {
   const {
     table,
-    modalState,
     filters,
-    isLoading,
     renderGrid,
-    isSubmitting,
-    handleCreateUser,
-    handleModalClose,
-    handleModalSubmit,
+    isLoading,
     hasActiveFilters,
     handleClearFilters,
   } = useUsersList();
+
+  const userModal = useUserModal();
 
   // Error state
   if (table.state.error) {
@@ -52,7 +50,10 @@ export default function UsersPage() {
         title="Users CRM"
         description="Manage your team and their roles"
         actionButton={
-          <ActionButton onClick={handleCreateUser} disabled={isLoading}>
+          <ActionButton
+            onClick={userModal.openCreateModal}
+            disabled={userModal.isSubmitting}
+          >
             <Icon name="PlusIcon" />
             Add User
           </ActionButton>
@@ -96,12 +97,12 @@ export default function UsersPage() {
       )}
 
       <UserModal
-        isOpen={modalState.isOpen}
-        mode={modalState.mode}
-        user={modalState.user}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
-        isLoading={isSubmitting}
+        isOpen={userModal.modalState.isOpen}
+        mode={userModal.modalState.mode}
+        user={userModal.modalState.user}
+        onClose={userModal.closeModal}
+        onSubmit={userModal.handleSubmit}
+        isLoading={userModal.isSubmitting}
       />
     </div>
   );

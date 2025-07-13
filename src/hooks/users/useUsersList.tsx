@@ -1,33 +1,14 @@
-import { useState, useCallback } from "react";
+// src/hooks/users/useUsersList.ts
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { type User } from "@/types/user";
 import { useUsersTable } from "./useUsersTable";
-import useUsersApi from "@/api/client";
 import { filterOptions } from "@/constants";
 import { UserGrid } from "@/components/user/grid";
 
-type ModalState = {
-  isOpen: boolean;
-  mode: "create" | "edit";
-  user: User | null;
-};
-
 export const useUsersList = () => {
   const navigate = useNavigate();
-  const usersApi = useUsersApi();
 
-  // API mutations
-  const createMutation = usersApi.useCreate();
-  const updateMutation = usersApi.useUpdate();
-
-  // Modal state
-  const [modalState, setModalState] = useState<ModalState>({
-    isOpen: false,
-    mode: "create",
-    user: null,
-  });
-
-  // Event handlers
   const handleViewUser = useCallback(
     ({ id }: User) => {
       navigate({ to: `/user/${id}` });
@@ -35,59 +16,25 @@ export const useUsersList = () => {
     [navigate]
   );
 
-  const handleEditUser = useCallback((user: User) => {
-    setModalState({ isOpen: true, mode: "edit", user });
-  }, []);
-
   const table = useUsersTable({
     onViewUser: handleViewUser,
-    onEditUser: handleEditUser,
   });
-
-  const handleCreateUser = useCallback(() => {
-    setModalState({ isOpen: true, mode: "create", user: null });
-  }, []);
-
-  const handleModalClose = useCallback(() => {
-    setModalState({ isOpen: false, mode: "create", user: null });
-  }, []);
-
-  const handleModalSubmit = useCallback(
-    async (data: any) => {
-      try {
-        if ("id" in data) {
-          await updateMutation.mutateAsync(data);
-        } else {
-          await createMutation.mutateAsync(data);
-        }
-        handleModalClose();
-      } catch (error) {
-        throw error;
-      }
-    },
-    [createMutation, updateMutation, handleModalClose]
-  );
 
   const handleClearAllFilters = useCallback(() => {
     table.actions.clearFilters();
   }, [table.actions]);
 
-  // Render functions
   const renderGrid = useCallback(
-    (user: User) => (
-      <UserGrid user={user} onView={handleViewUser} onEdit={handleEditUser} />
+    (user: User, onEdit?: (user: User) => void) => (
+      <UserGrid user={user} onView={handleViewUser} onEdit={onEdit} />
     ),
-    [handleViewUser, handleEditUser]
+    [handleViewUser]
   );
 
-  // Computed values
-  const isLoading = table.state.isLoading;
-  const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const hasActiveFilters =
     Object.values(table.state.filters).some((v) => v !== undefined) ||
     !!table.state.search;
 
-  // Filters for ControlPanel
   const filters = [
     {
       value: String(table.state.filters.role || "all"),
@@ -101,10 +48,6 @@ export const useUsersList = () => {
           ? "all"
           : String(table.state.filters.active),
       onChange: (value: string) => {
-        console.log("🔍 Active filter onChange:", {
-          value,
-          converted: value === "all" ? undefined : value === "true",
-        });
         table.actions.updateFilter(
           "active",
           value === "all" ? undefined : value === "true"
@@ -115,23 +58,22 @@ export const useUsersList = () => {
   ];
 
   return {
-    // State
-    modalState,
-    isLoading,
-    isSubmitting,
+    // Table
+    table,
+    // Loading state
+    isLoading: table.state.isLoading,
+
+    // Computed state
     hasActiveFilters,
 
-    // Table data and actions
-    table,
+    // Configuration
     filters,
 
     // Event handlers
-    handleCreateUser,
-    handleModalClose,
-    handleModalSubmit,
+    handleViewUser,
     handleClearFilters: handleClearAllFilters,
 
-    // Render
+    // Render functions
     renderGrid,
   };
 };

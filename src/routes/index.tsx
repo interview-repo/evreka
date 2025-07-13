@@ -2,11 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useUsersList } from "@/hooks/users/useUsersList";
 import { ControlPanel } from "@/components/shared/control-panel";
 import { ContentArea } from "@/components/shared/content";
-import { Pagination } from "@/components/table/Pagination";
+import { Pagination } from "@/components/table/pagination";
 import { Loading } from "@/components/shared/loading";
 import { Header } from "@/components/shared/header";
 import { Icon } from "@/components/shared/Icon";
 import { ActionButton } from "@/components/shared/button";
+import { UserModal } from "@/components/user/modal";
 
 export const Route = createFileRoute("/")({
   component: UsersPage,
@@ -15,9 +16,14 @@ export const Route = createFileRoute("/")({
 export default function UsersPage() {
   const {
     table,
+    modalState,
     filters,
     isLoading,
     renderGrid,
+    isSubmitting,
+    handleCreateUser,
+    handleModalClose,
+    handleModalSubmit,
     hasActiveFilters,
     handleClearFilters,
   } = useUsersList();
@@ -46,7 +52,7 @@ export default function UsersPage() {
         title="Users CRM"
         description="Manage your team and their roles"
         actionButton={
-          <ActionButton onClick={() => {}} disabled={isLoading}>
+          <ActionButton onClick={handleCreateUser} disabled={isLoading}>
             <Icon name="PlusIcon" />
             Add User
           </ActionButton>
@@ -88,6 +94,15 @@ export default function UsersPage() {
           onNext={table.actions.nextPage}
         />
       )}
+
+      <UserModal
+        isOpen={modalState.isOpen}
+        mode={modalState.mode}
+        user={modalState.user}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 }

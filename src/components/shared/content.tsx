@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import type { JSX } from "react";
 import { EmptyData } from "./not-found";
-import type { ViewMode } from "../table/types";
+import type { ViewMode } from "@/constants/viewmode-option";
 
 interface IProps<T = any> {
   viewMode: ViewMode;

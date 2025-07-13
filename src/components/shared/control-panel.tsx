@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import type { Option } from "../form/select";
-import { FilterSelect } from "../table/FilterSelect";
-import { PaginationMode } from "../table/PaginationMode";
+import { FilterSelect } from "../table/filter-select";
+import { PaginationMode } from "../table/pagination-mode";
 import { SearchInput } from "./search-input";
-import { ViewModeToggle } from "../table/ViewModeToggle";
-import { viewModesOptions, type ViewModeOption } from "@/constants/viewmode-option";
+import { ViewModeToggle } from "../table/view-mode";
+import {
+  viewModesOptions,
+  type ViewModeOption,
+} from "@/constants/viewmode-option";
 import { Icon } from "./Icon";
 
 interface IProps {

@@ -1,9 +1,9 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import type { User } from "@/types/user";
 import { Icon } from "../shared/Icon";
 import { UserDetailCard } from "./card";
-import { UserLocationMap } from "../location/UserLocation";
+import { UserLocationMap } from "../location/user-location";
 
 interface IProps {
   user?: User;
@@ -245,7 +245,9 @@ const SkeletonHeader = styled.div`
 const SkeletonElement = styled.div<{ width?: string; height?: string }>`
   background: #e5e7eb;
   border-radius: 8px;
-  animation: ${pulse} 2s ease-in-out infinite;
+  ${css`
+    animation: ${pulse} 2s ease-in-out infinite;
+  `}
   width: ${({ width }) => width || "100%"};
   height: ${({ height }) => height || "20px"};
 `;
@@ -281,7 +283,9 @@ const ErrorCard = styled.div`
   border: 1px solid rgba(229, 231, 235, 0.6);
   padding: 32px;
   text-align: center;
-  animation: ${fadeInUp} 0.6s ease-out;
+  ${css`
+    animation: ${fadeInUp} 0.6s ease-out;
+  `}
 `;
 
 const ErrorIcon = styled.div`
@@ -375,7 +379,9 @@ const FloatingElement = styled.div<{ delay?: number }>`
   position: absolute;
   border-radius: 50%;
   filter: blur(24px);
-  animation: ${float} 6s ease-in-out infinite;
+  ${css`
+    animation: ${float} 6s ease-in-out infinite;
+  `}
   animation-delay: ${({ delay }) => delay || 0}s;
 `;
 

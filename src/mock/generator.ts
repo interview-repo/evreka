@@ -82,7 +82,7 @@ export class MockServer<T extends BaseEntity> {
     return result;
   }
 
-  private paginate(items: T[], page = 1, limit = 20): Response<T> {
+  private paginate(items: T[], page = 1, limit = 20): Response<T[]> {
     const start = (page - 1) * limit;
     const total = items.length;
     const totalPages = Math.ceil(total / limit);

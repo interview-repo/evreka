@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 interface IProps {
   message?: string;
@@ -23,7 +23,9 @@ const LoadingOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 40;
-  animation: fadeIn 0.2s ease-out;
+  ${css`
+    animation: fadeIn 0.2s ease-out;
+  `}
 
   @keyframes fadeIn {
     from {
@@ -40,7 +42,9 @@ const LoadingCard = styled.div`
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: slideUp 0.3s ease-out;
+  ${css`
+    animation: slideUp 0.3s ease-out;
+  `}
   animation-delay: 0.1s;
   animation-fill-mode: both;
 
@@ -68,7 +72,9 @@ const Spinner = styled.div`
   border: 3px solid #9333ea;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+  ${css`
+    animation: ${spin} 1s linear infinite;
+  `}
 `;
 
 const LoadingText = styled.span`

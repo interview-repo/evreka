@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Icon } from "../shared/Icon";
 import { type Option } from "../form/select";
 
@@ -92,7 +92,9 @@ const ActiveBadge = styled.div`
   height: 8px;
   background: #8b5cf6;
   border-radius: 50%;
-  animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  ${css`
+    animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  `}
 `;
 
 const ChevronWrapper = styled.div<{ $isOpen: boolean }>`

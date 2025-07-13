@@ -90,7 +90,7 @@ const CoordinateLabel = styled.span`
 `;
 
 const CoordinateValue = styled.p`
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   color: #111827;
   margin-top: 2px;
   margin-bottom: 0;
@@ -116,7 +116,7 @@ const StatusBadge = styled.span<{ active: boolean }>`
   font-size: 12px;
   font-weight: 500;
   border: 1px solid;
-  
+
   ${({ active }) =>
     active
       ? `
@@ -173,9 +173,7 @@ export const UserMarker: React.FC<{
         <PopupCard>
           <PopupHeader>
             <HeaderContent>
-              <Avatar>
-                {user.name[0]?.toUpperCase()}
-              </Avatar>
+              <Avatar>{user.name[0]?.toUpperCase()}</Avatar>
               <UserInfo>
                 <UserName>{user.name}</UserName>
                 <UserEmail>{user.email}</UserEmail>
@@ -210,9 +208,7 @@ export const UserMarker: React.FC<{
               </StatusBadge>
             </StatusRow>
 
-            <DirectionsButton>
-              Get Directions
-            </DirectionsButton>
+            <DirectionsButton>Get Directions</DirectionsButton>
           </PopupBody>
         </PopupCard>
       </Popup>

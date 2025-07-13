@@ -6,7 +6,7 @@ import type {
   UseMutationOptions,
 } from "@tanstack/react-query";
 
-type CreateData<T extends BaseEntity> = Omit<T, keyof BaseEntity>;
+export type CreateData<T extends BaseEntity> = Omit<T, keyof BaseEntity>;
 type UpdatePayload<T extends BaseEntity> = { id: string; data: T };
 
 // API Client

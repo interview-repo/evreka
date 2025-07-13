@@ -1,6 +1,6 @@
-import calculatePasswordStrength from "@/utils/passwordStrength";
 import { useMemo } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
+import calculatePasswordStrength from "@/utils/passwordStrength";
 
 const strengthFill = keyframes`
   from { width: 0%; }
@@ -43,9 +43,9 @@ const StrengthBar = styled.div<{ active: boolean; level: string }>`
 
   ${({ active }) =>
     active &&
-    `
-    animation: ${strengthFill} 0.3s ease-out;
-  `}
+    css`
+      animation: ${strengthFill} 0.3s ease-out;
+    `}
 `;
 
 const StrengthInfo = styled.div`

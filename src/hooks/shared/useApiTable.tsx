@@ -1,11 +1,8 @@
 import { useState, useMemo, useCallback } from "react";
 import { Table } from "@/components/table";
 import type { createApi } from "./useApi";
-import type {
-  TableColumn,
-  TableAction,
-  ViewMode,
-} from "@/components/table/types";
+import type { TableColumn, TableAction } from "@/components/table/types";
+import type { ViewMode } from "@/constants/viewmode-option";
 import type { BaseEntity } from "@/types/base";
 import type { Filter } from "@/types/response";
 
@@ -90,6 +87,11 @@ export function useApiTable<T extends BaseEntity>({
   const updateFilter = useCallback((key: string, value: any) => {
     setFilters((prev) => {
       const newFilters = { ...prev };
+      if (value === undefined || value === null || value === "all") {
+        delete newFilters[key as keyof T];
+      } else {
+        (newFilters as any)[key] = value;
+      }
       return newFilters;
     });
     setCurrentPage(1);

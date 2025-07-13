@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import type { User } from "@/types/user";
 import { Icon } from "../shared/Icon";
 import { UserDetailCard } from "./card";
+import { UserLocationMap } from "../location/UserLocation";
 
 interface IProps {
   user?: User;
@@ -522,7 +523,7 @@ export const UserDetailPage: React.FC<IProps> = ({
           </ProfileSection>
 
           <MapSection visible={isVisible}>
-            {/* <UserLocationMap user={user} /> */}
+            <UserLocationMap user={user} />
           </MapSection>
         </GridContainer>
       </MainContent>

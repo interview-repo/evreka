@@ -1,14 +1,19 @@
 import { useState, useMemo, useCallback } from "react";
-import type { createApi } from "./useApi";
-import type { TableColumn, TableAction } from "@/components/table/types";
-import type { BaseEntity } from "@/types/base";
 import { Table } from "@/components/table";
+import type { createApi } from "./useApi";
+import type {
+  TableColumn,
+  TableAction,
+  ViewMode,
+} from "@/components/table/types";
+import type { BaseEntity } from "@/types/base";
 import type { Filter } from "@/types/response";
 
 interface UseApiTableConfig<T extends BaseEntity> {
   api: ReturnType<typeof createApi<T>>;
   columns: TableColumn<T>[];
   actions?: TableAction<T>[];
+  defaultViewMode?: ViewMode;
   pageSize?: number;
   baseFilters?: Record<string, any>;
 }
@@ -17,12 +22,14 @@ export function useApiTable<T extends BaseEntity>({
   api,
   columns,
   actions = [],
+  defaultViewMode = "table",
   pageSize = 25,
   baseFilters = {},
 }: UseApiTableConfig<T>) {
   const apiHook = api();
 
   // UI state
+  const [viewMode, setViewMode] = useState<ViewMode>(defaultViewMode);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -141,6 +148,7 @@ export function useApiTable<T extends BaseEntity>({
 
   // Actions
   const actions_obj = {
+    setViewMode,
     setSearch,
     setIsPaginated,
     setCurrentPage,
@@ -153,6 +161,7 @@ export function useApiTable<T extends BaseEntity>({
 
   // State
   const state = {
+    viewMode,
     search,
     sortBy,
     sortOrder,

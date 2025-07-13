@@ -1,0 +1,15 @@
+{
+  "projectName": "evreka-users",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "yarn",
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "table",
+    "tanstack-query"
+  ]
+}

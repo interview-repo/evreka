@@ -12,7 +12,7 @@ interface UseApiTableConfig<T extends BaseEntity> {
   actions?: TableAction<T>[];
   defaultViewMode?: ViewMode;
   pageSize?: number;
-  baseFilters?: Record<string, any>;
+  baseFilters?: Record<string, unknown>;
 }
 
 export function useApiTable<T extends BaseEntity>({
@@ -84,7 +84,7 @@ export function useApiTable<T extends BaseEntity>({
     [sortBy, sortOrder]
   );
 
-  const updateFilter = useCallback((key: string, value: any) => {
+  const updateFilter = useCallback((key: string, value: unknown) => {
     setFilters((prev) => {
       const newFilters = { ...prev };
       if (value === undefined || value === null || value === "all") {

@@ -225,7 +225,7 @@ export const FilterSelect: React.FC<IProps> = ({
           <SelectContent>
             {selectedOption?.icon && (
               <Icon
-                name={selectedOption.icon as any}
+                name={selectedOption.icon}
                 className={`size-4 ${
                   hasSelection ? "text-violet-600" : "text-gray-500"
                 }`}
@@ -265,7 +265,7 @@ export const FilterSelect: React.FC<IProps> = ({
                         $isSelected={option.value === value}
                         disabled={option.disabled}
                       >
-                        <Icon name={option.icon as any} />
+                        <Icon name={option.icon} />
                       </OptionIcon>
                     )}
                     <OptionText>{option.label}</OptionText>

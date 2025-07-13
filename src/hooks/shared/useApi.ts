@@ -7,7 +7,7 @@ import type {
 } from "@tanstack/react-query";
 
 type CreateData<T extends BaseEntity> = Omit<T, keyof BaseEntity>;
-type UpdatePayload<T extends BaseEntity> = { id: string; data: T[] };
+type UpdatePayload<T extends BaseEntity> = { id: string; data: T };
 
 // API Client
 const api = {
@@ -83,7 +83,7 @@ export const useApi = <T extends BaseEntity, F extends Filter<T> = Filter<T>>(
     queryClient.invalidateQueries({ queryKey: keys.all });
 
   // List Query
-  const useList = <R = Response<T>>(
+  const useList = <R = Response<T[]>>(
     filters?: F,
     options?: Partial<UseQueryOptions<R, Error, R>>
   ) => {

@@ -8,8 +8,8 @@ export type Filter<T> = Partial<T> & {
 };
 
 export type Response<T> = {
-  data: T[];
-  meta: {
+  data: T;
+  meta?: {
     total: number;
     page: number;
     limit: number;

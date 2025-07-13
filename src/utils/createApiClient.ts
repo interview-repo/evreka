@@ -10,7 +10,7 @@ export const createApiClient = <T extends BaseEntity>(resource: string) => {
 
     list: (filters?: Record<string, unknown>) => {
       const url = `/${resource}`;
-      if (!filters) return api.get<Response<T>>(url);
+      if (!filters) return api.get<Response<T[]>>(url);
 
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -19,7 +19,7 @@ export const createApiClient = <T extends BaseEntity>(resource: string) => {
         }
       });
 
-      return api.get<Response<T>>(`${url}?${params}`);
+      return api.get<Response<T[]>>(`${url}?${params}`);
     },
 
     create: (data: Omit<T, keyof BaseEntity>) =>

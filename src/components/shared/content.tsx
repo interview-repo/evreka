@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import type { JSX } from "react";
 import { EmptyData } from "./not-found";
+import { VirtualizedGrid } from "../table/virtualized-grid";
 import type { ViewMode } from "@/constants/viewmode-option";
+import type { BaseEntity } from "@/types/base";
 
-interface IProps<T = any> {
+interface IProps<T extends BaseEntity> {
   viewMode: ViewMode;
   data: T[];
   renderTable?: ({
@@ -15,11 +17,12 @@ interface IProps<T = any> {
   renderGrid?: (item: T) => React.ReactNode;
   renderListItem?: (item: T) => React.ReactNode;
   className?: string;
-  gridCols?: {
-    sm?: number;
-    md?: number;
-    lg?: number;
-    xl?: number;
+  isLoading?: boolean;
+  error?: Error | null;
+  gridConfig?: {
+    itemsPerRow?: number;
+    itemMinWidth?: number;
+    gap?: number;
   };
 }
 
@@ -43,67 +46,50 @@ const TableContainer = styled.div`
   height: calc(100vh - 23rem);
 `;
 
-const GridContainer = styled.div`
-  height: calc(100vh - 23rem);
-  overflow: auto;
-`;
-
-const GridContent = styled.div<{
-  $gridCols: { sm?: number; md?: number; lg?: number; xl?: number };
-}>`
-  display: grid;
-  gap: 24px;
-  padding: 24px;
-
-  grid-template-columns: repeat(${(props) => props.$gridCols.sm || 1}, 1fr);
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(${(props) => props.$gridCols.md || 2}, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(${(props) => props.$gridCols.lg || 3}, 1fr);
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(${(props) => props.$gridCols.xl || 4}, 1fr);
-  }
-`;
-
-const GridItem = styled.div`
-  width: 100%;
-`;
-
-export const ContentArea = <T extends { id: string }>({
+export const ContentArea = <T extends BaseEntity>({
   viewMode,
   data,
   renderTable,
   renderGrid,
   className = "",
-  gridCols = { sm: 1, md: 2, lg: 3, xl: 4 },
+  isLoading = false,
+  error = null,
+  gridConfig = {
+    itemsPerRow: 4,
+    itemMinWidth: 280,
+    gap: 24,
+  },
 }: IProps<T>) => {
   const renderContent = () => {
-    if (data.length === 0) {
-      return <EmptyData />;
-    }
+    if (!isLoading && data.length === 0) return <EmptyData />;
 
     switch (viewMode) {
       case "table":
-        return <TableContainer>{renderTable?.({})}</TableContainer>;
+        return (
+          <TableContainer>
+            {renderTable?.({ onRowClick: undefined })}
+          </TableContainer>
+        );
 
       case "grid":
+        if (!renderGrid) {
+          return <EmptyData />;
+        }
+
         return (
-          <GridContainer>
-            <GridContent $gridCols={gridCols}>
-              {data.map((item) => (
-                <GridItem key={item.id}>{renderGrid?.(item)}</GridItem>
-              ))}
-            </GridContent>
-          </GridContainer>
+          <VirtualizedGrid
+            data={data}
+            renderItem={renderGrid}
+            isLoading={isLoading}
+            error={error}
+            itemsPerRow={gridConfig.itemsPerRow}
+            itemMinWidth={gridConfig.itemMinWidth}
+            gap={gridConfig.gap}
+          />
         );
 
       default:
-        return null;
+        return <EmptyData />;
     }
   };
 

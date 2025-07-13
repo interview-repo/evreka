@@ -177,3 +177,49 @@ export const Button: React.FC<IProps> = ({
     </StyledButton>
   );
 };
+
+export const ActionButton = styled.button<{ disabled?: boolean }>`
+  position: relative;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(to right, #9333ea, #6366f1);
+  color: white;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.25);
+  transition: all 0.2s ease;
+  transform: scale(1);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(to right, #7c3aed, #4f46e5);
+    box-shadow: 0 15px 35px -5px rgba(147, 51, 234, 0.4);
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(1.02);
+  }
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: scale(1) !important;
+    box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.25) !important;
+  `}
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover:not(:disabled) svg {
+    transform: rotate(90deg);
+  }
+`;

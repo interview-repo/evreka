@@ -27,7 +27,6 @@ const ContentContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 32px;
-  margin-top: 140px;
   margin-bottom: 80px;
 `;
 

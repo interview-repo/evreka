@@ -5,7 +5,7 @@ import { FilterSelect } from "../table/FilterSelect";
 import { PaginationMode } from "../table/PaginationMode";
 import { SearchInput } from "./search-input";
 import { ViewModeToggle } from "../table/ViewModeToggle";
-import type { ViewModeOption } from "@/constants/viewmode-option";
+import { viewModesOptions, type ViewModeOption } from "@/constants/viewmode-option";
 import { Icon } from "./Icon";
 
 interface IProps {
@@ -18,7 +18,6 @@ interface IProps {
     options: Option[];
   }>;
   viewMode?: string;
-  viewModes?: readonly ViewModeOption[];
   onViewModeChange?: (mode: ViewModeOption["mode"]) => void;
   isPaginated?: boolean;
   onPaginationToggle?: (isPaginated: boolean) => void;
@@ -212,7 +211,6 @@ export const ControlPanel: React.FC<IProps> = ({
   searchPlaceholder = "Search...",
   filters = [],
   viewMode,
-  viewModes = [],
   onViewModeChange,
   isPaginated,
   onPaginationToggle,
@@ -265,7 +263,7 @@ export const ControlPanel: React.FC<IProps> = ({
               {/* View Mode Toggle */}
               {showViewControls &&
                 viewMode &&
-                viewModes.length > 0 &&
+                viewModesOptions.length > 0 &&
                 onViewModeChange && (
                   <ViewModeToggle
                     currentMode={viewMode}

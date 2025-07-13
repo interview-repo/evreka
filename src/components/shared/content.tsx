@@ -27,6 +27,7 @@ const ContentContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 32px;
+  margin-top: 140px;
   margin-bottom: 80px;
 `;
 
@@ -40,11 +41,11 @@ const ContentWrapper = styled.div`
 `;
 
 const TableContainer = styled.div`
-  height: calc(100vh - 40rem);
+  height: calc(100vh - 23rem);
 `;
 
 const GridContainer = styled.div`
-  height: calc(100vh - 40rem);
+  height: calc(100vh - 23rem);
   overflow: auto;
 `;
 

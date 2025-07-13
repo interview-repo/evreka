@@ -61,7 +61,7 @@ const TableCell = styled.td`
     border-right: none;
   }
 
-  &:hover {
+  tr:hover & {
     background: linear-gradient(
       to right,
       rgba(243, 232, 255, 0.3),
@@ -70,7 +70,9 @@ const TableCell = styled.td`
   }
 `;
 
-const ActionButton = styled.button<{ variant?: "danger" | "success" | "default" }>`
+const ActionButton = styled.button<{
+  variant?: "danger" | "success" | "default";
+}>`
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 500;
@@ -160,9 +162,7 @@ export function Table<T extends BaseEntity>({
           Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
             <div {...props} ref={ref} />
           )),
-          Table: (props) => (
-            <StyledTable {...props} />
-          ),
+          Table: (props) => <StyledTable {...props} />,
           TableHead: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
             <thead {...props} ref={ref} />
           )),

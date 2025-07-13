@@ -13,7 +13,7 @@ const AvatarContainer = styled.div`
   display: inline-block;
 `;
 
-const AvatarCircle = styled.div<{ size: "sm" | "md" | "lg" }>`
+const AvatarCircle = styled.div<{ $size: "sm" | "md" | "lg" }>`
   background: linear-gradient(to bottom right, #8b5cf6, #a855f7, #6366f1);
   border-radius: 50%;
   display: flex;
@@ -25,8 +25,8 @@ const AvatarCircle = styled.div<{ size: "sm" | "md" | "lg" }>`
   box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.25);
   transition: all 0.3s ease;
 
-  ${({ size }) => {
-    switch (size) {
+  ${({ $size }) => {
+    switch ($size) {
       case "sm":
         return `
           width: 32px;
@@ -61,19 +61,19 @@ const AvatarCircle = styled.div<{ size: "sm" | "md" | "lg" }>`
 `;
 
 const StatusIndicator = styled.div<{
-  size: "sm" | "md" | "lg";
-  isActive: boolean;
+  $size: "sm" | "md" | "lg";
+  $isActive: boolean;
 }>`
   position: absolute;
   bottom: -2px;
   right: -2px;
   border: 2px solid white;
   border-radius: 50%;
-  background: ${({ isActive }) => (isActive ? "#34d399" : "#f87171")};
+  background: ${({ $isActive }) => ($isActive ? "#34d399" : "#f87171")};
   transition: all 0.3s ease;
 
-  ${({ size }) => {
-    switch (size) {
+  ${({ $size }) => {
+    switch ($size) {
       case "sm":
         return `
           width: 8px;
@@ -115,11 +115,11 @@ export const Avatar: React.FC<IProps> = ({
 }) => {
   return (
     <AvatarContainer>
-      <AvatarCircle size={size}>
+      <AvatarCircle $size={size}>
         <AvatarInitial>{name[0]?.toUpperCase()}</AvatarInitial>
       </AvatarCircle>
 
-      {showStatus && <StatusIndicator size={size} isActive={isActive} />}
+      {showStatus && <StatusIndicator $size={size} $isActive={isActive} />}
     </AvatarContainer>
   );
 };

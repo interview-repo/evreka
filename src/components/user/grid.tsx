@@ -99,7 +99,7 @@ const ActionButtons = styled.div`
   }
 `;
 
-const ActionButton = styled.button<{ variant: "primary" | "secondary" }>`
+const ActionButton = styled.button<{ $variant: "primary" | "secondary" }>`
   flex: 1;
   padding: 10px 20px;
   font-weight: 500;
@@ -108,8 +108,8 @@ const ActionButton = styled.button<{ variant: "primary" | "secondary" }>`
   border: 1px solid;
   cursor: pointer;
 
-  ${({ variant }) =>
-    variant === "primary"
+  ${({ $variant }) =>
+    $variant === "primary"
       ? `
         background: #111827;
         color: white;
@@ -159,12 +159,12 @@ export const UserGrid: React.FC<IProps> = ({ user, onView, onEdit }) => {
 
         <ActionButtons>
           {onView && (
-            <ActionButton variant="primary" onClick={() => onView(user)}>
+            <ActionButton $variant="primary" onClick={() => onView(user)}>
               View
             </ActionButton>
           )}
           {onEdit && (
-            <ActionButton variant="secondary" onClick={() => onEdit(user)}>
+            <ActionButton $variant="secondary" onClick={() => onEdit(user)}>
               Edit
             </ActionButton>
           )}

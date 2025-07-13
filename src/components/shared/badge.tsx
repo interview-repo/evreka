@@ -12,7 +12,7 @@ interface StatusBadgeProps {
   size?: "sm" | "md";
 }
 
-const BadgeBase = styled.div<{ size: "sm" | "md" }>`
+const BadgeBase = styled.div<{ $size: "sm" | "md" }>`
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -21,8 +21,8 @@ const BadgeBase = styled.div<{ size: "sm" | "md" }>`
   border: 1px solid;
   transition: all 0.2s ease;
 
-  ${({ size }) =>
-    size === "sm"
+  ${({ $size }) =>
+    $size === "sm"
       ? `
         padding: 4px 8px;
         font-size: 12px;
@@ -39,10 +39,10 @@ const BadgeBase = styled.div<{ size: "sm" | "md" }>`
 `;
 
 const RoleBadgeStyled = styled(BadgeBase)<{
-  role: "admin" | "manager" | "user";
+  $role: "admin" | "manager" | "user";
 }>`
-  ${({ role }) => {
-    switch (role) {
+  ${({ $role }) => {
+    switch ($role) {
       case "admin":
         return `
           background: #fef2f2;
@@ -71,9 +71,9 @@ const RoleBadgeStyled = styled(BadgeBase)<{
   }}
 `;
 
-const StatusBadgeStyled = styled(BadgeBase)<{ isActive: boolean }>`
-  ${({ isActive }) =>
-    isActive
+const StatusBadgeStyled = styled(BadgeBase)<{ $isActive: boolean }>`
+  ${({ $isActive }) =>
+    $isActive
       ? `
         background: #ecfdf5;
         color: #059669;
@@ -87,15 +87,15 @@ const StatusBadgeStyled = styled(BadgeBase)<{ isActive: boolean }>`
 `;
 
 const DotIndicator = styled.div<{
-  variant: "admin" | "manager" | "user" | "active" | "inactive";
+  $variant: "admin" | "manager" | "user" | "active" | "inactive";
 }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 
-  ${({ variant }) => {
-    switch (variant) {
+  ${({ $variant }) => {
+    switch ($variant) {
       case "admin":
         return `background: #ef4444;`;
       case "manager":
@@ -119,8 +119,8 @@ const BadgeText = styled.span`
 
 export const RoleBadge: React.FC<RoleBadgeProps> = ({ role, size = "md" }) => {
   return (
-    <RoleBadgeStyled role={role} size={size}>
-      <DotIndicator variant={role} />
+    <RoleBadgeStyled $role={role} $size={size}>
+      <DotIndicator $variant={role} />
       <BadgeText>{role}</BadgeText>
     </RoleBadgeStyled>
   );
@@ -131,8 +131,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   size = "md",
 }) => {
   return (
-    <StatusBadgeStyled isActive={isActive} size={size}>
-      <DotIndicator variant={isActive ? "active" : "inactive"} />
+    <StatusBadgeStyled $isActive={isActive} $size={size}>
+      <DotIndicator $variant={isActive ? "active" : "inactive"} />
       <BadgeText>{isActive ? "Active" : "Inactive"}</BadgeText>
     </StatusBadgeStyled>
   );

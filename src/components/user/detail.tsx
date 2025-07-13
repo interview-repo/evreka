@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 import type { User } from "@/types/user";
 import { Icon } from "../shared/Icon";
@@ -38,28 +38,22 @@ const float = keyframes`
 // Styled Components
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #f8fafc, rgba(219, 234, 254, 0.3), rgba(224, 231, 255, 0.5));
+  background: linear-gradient(
+    to bottom right,
+    #f8fafc,
+    rgba(219, 234, 254, 0.3),
+    rgba(224, 231, 255, 0.5)
+  );
 `;
 
-const StickyHeader = styled.div<{ scrolled: boolean }>`
+const StickyHeader = styled.div`
   position: sticky;
   top: 0;
   z-index: 50;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  ${({ scrolled }) =>
-    scrolled
-      ? `
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 10px 15px -3px rgba(17, 24, 39, 0.05);
-        border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-      `
-      : `
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(229, 231, 235, 0.5);
-      `}
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
 `;
 
 const HeaderContent = styled.div`
@@ -96,10 +90,14 @@ const BackButton = styled.button`
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -4px;
-    background: linear-gradient(to right, rgba(37, 99, 235, 0.2), rgba(99, 102, 241, 0.2));
+    background: linear-gradient(
+      to right,
+      rgba(37, 99, 235, 0.2),
+      rgba(99, 102, 241, 0.2)
+    );
     border-radius: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -151,7 +149,7 @@ const StatusBadge = styled.div<{ active: boolean }>`
   border-radius: 9999px;
   font-size: 12px;
   font-weight: 500;
-  
+
   ${({ active }) =>
     active
       ? `
@@ -186,13 +184,11 @@ const UserEmail = styled.p`
   }
 `;
 
-const MainContent = styled.div<{ visible: boolean }>`
+const MainContent = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 32px 24px;
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: translateY(${({ visible }) => (visible ? 0 : 32)}px);
 `;
 
 const GridContainer = styled.div`
@@ -205,25 +201,21 @@ const GridContainer = styled.div`
   }
 `;
 
-const ProfileSection = styled.div<{ visible: boolean }>`
+const ProfileSection = styled.div`
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   transition-delay: 0.1s;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: translateY(${({ visible }) => (visible ? 0 : 32)}px);
 
   @media (min-width: 1280px) {
     grid-column: span 4;
   }
 `;
 
-const MapSection = styled.div<{ visible: boolean }>`
+const MapSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   transition-delay: 0.2s;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: translateY(${({ visible }) => (visible ? 0 : 32)}px);
 
   @media (min-width: 1280px) {
     grid-column: span 8;
@@ -233,7 +225,12 @@ const MapSection = styled.div<{ visible: boolean }>`
 // Loading Components
 const LoaderContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #f8fafc, rgba(219, 234, 254, 0.3), rgba(224, 231, 255, 0.5));
+  background: linear-gradient(
+    to bottom right,
+    #f8fafc,
+    rgba(219, 234, 254, 0.3),
+    rgba(224, 231, 255, 0.5)
+  );
 `;
 
 const SkeletonHeader = styled.div`
@@ -249,8 +246,8 @@ const SkeletonElement = styled.div<{ width?: string; height?: string }>`
   background: #e5e7eb;
   border-radius: 8px;
   animation: ${pulse} 2s ease-in-out infinite;
-  width: ${({ width }) => width || '100%'};
-  height: ${({ height }) => height || '20px'};
+  width: ${({ width }) => width || "100%"};
+  height: ${({ height }) => height || "20px"};
 `;
 
 const SkeletonAvatar = styled(SkeletonElement)`
@@ -262,7 +259,12 @@ const SkeletonAvatar = styled(SkeletonElement)`
 // Error Components
 const ErrorContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #f8fafc, rgba(219, 234, 254, 0.3), rgba(224, 231, 255, 0.5));
+  background: linear-gradient(
+    to bottom right,
+    #f8fafc,
+    rgba(219, 234, 254, 0.3),
+    rgba(224, 231, 255, 0.5)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,7 +314,7 @@ const ErrorMessage = styled.p`
   line-height: 1.6;
 `;
 
-const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
+const ActionButton = styled.button<{ variant?: "primary" | "secondary" }>`
   width: 100%;
   display: inline-flex;
   align-items: center;
@@ -331,7 +333,7 @@ const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   }
 
   ${({ variant }) =>
-    variant === 'primary'
+    variant === "primary"
       ? `
         background: linear-gradient(to right, #2563eb, #6366f1);
         color: white;
@@ -393,7 +395,6 @@ const IndigoOrb = styled(FloatingElement)`
   background: rgba(99, 102, 241, 0.1);
 `;
 
-
 const DetailPageLoader: React.FC = () => (
   <LoaderContainer>
     <SkeletonHeader>
@@ -449,7 +450,10 @@ const DetailPageError: React.FC<{
           <Icon name="ArrowLeftIcon" />
           Return to Users
         </ActionButton>
-        <ActionButton variant="secondary" onClick={() => window.location.reload()}>
+        <ActionButton
+          variant="secondary"
+          onClick={() => window.location.reload()}
+        >
           <Icon name="ArrowPathIcon" />
           Try Again
         </ActionButton>
@@ -465,34 +469,15 @@ export const UserDetailPage: React.FC<IProps> = ({
   onBack,
   onEdit,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [headerScrolled, setHeaderScrolled] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && !error && user) {
-      const timer = setTimeout(() => setIsVisible(true), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading, error, user]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setHeaderScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   if (isLoading) return <DetailPageLoader />;
-  
+
   if (error || !user) {
     return <DetailPageError error={error} onBack={onBack} />;
   }
 
   return (
     <PageContainer>
-      <StickyHeader scrolled={headerScrolled}>
+      <StickyHeader>
         <HeaderContent>
           <HeaderLeft>
             <BackButton onClick={onBack}>
@@ -516,13 +501,13 @@ export const UserDetailPage: React.FC<IProps> = ({
         </HeaderContent>
       </StickyHeader>
 
-      <MainContent visible={isVisible}>
+      <MainContent>
         <GridContainer>
-          <ProfileSection visible={isVisible}>
+          <ProfileSection>
             <UserDetailCard user={user} onEdit={onEdit} />
           </ProfileSection>
 
-          <MapSection visible={isVisible}>
+          <MapSection>
             <UserLocationMap user={user} />
           </MapSection>
         </GridContainer>

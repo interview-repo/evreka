@@ -27,7 +27,10 @@ const TableContainer = styled.div`
   border: 1px solid rgba(229, 231, 235, 0.5);
 `;
 
-const StyledTable = styled.table`
+const StyledTable = styled.table.withConfig({
+  shouldForwardProp: (prop) =>
+    ["className", "children", "style", "ref", "id"].includes(prop),
+})`
   table-layout: fixed;
   width: 100%;
 `;
@@ -71,7 +74,7 @@ const TableCell = styled.td`
 `;
 
 const ActionButton = styled.button<{
-  variant?: "danger" | "success" | "default";
+  $variant?: "danger" | "success" | "default";
 }>`
   padding: 6px 12px;
   font-size: 12px;
@@ -80,8 +83,8 @@ const ActionButton = styled.button<{
   transition: all 0.2s ease;
   border: 1px solid;
 
-  ${({ variant }) => {
-    switch (variant) {
+  ${({ $variant }) => {
+    switch ($variant) {
       case "danger":
         return `
           background: #fef2f2;
@@ -162,7 +165,10 @@ export function Table<T extends BaseEntity>({
           Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
             <div {...props} ref={ref} />
           )),
-          Table: (props) => <StyledTable {...props} />,
+          Table: React.forwardRef<
+            HTMLTableElement,
+            React.HTMLProps<HTMLTableElement>
+          >((props, ref) => <StyledTable {...props} ref={ref} />),
           TableHead: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
             <thead {...props} ref={ref} />
           )),
@@ -213,7 +219,7 @@ export function Table<T extends BaseEntity>({
                   {actions.map((action) => (
                     <ActionButton
                       key={action.key}
-                      variant={action.variant}
+                      $variant={action.variant}
                       onClick={(e) => {
                         e.stopPropagation();
                         action.onClick(row);

@@ -24,7 +24,10 @@ const ToggleBackground = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 `;
 
-const ActiveSlider = styled.div<{ activeIndex: number; totalOptions: number }>`
+const ActiveSlider = styled.div<{
+  $activeIndex: number;
+  $totalOptions: number;
+}>`
   position: absolute;
   top: 6px;
   bottom: 6px;
@@ -32,14 +35,15 @@ const ActiveSlider = styled.div<{ activeIndex: number; totalOptions: number }>`
   border-radius: 12px;
   box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.39);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  width: calc(${({ totalOptions }) => 100 / totalOptions}% - 4px);
+  width: calc(${({ $totalOptions }) => 100 / $totalOptions}% - 4px);
   left: calc(
-    ${({ activeIndex, totalOptions }) => activeIndex * (100 / totalOptions)}% +
+    ${({ $activeIndex, $totalOptions }) =>
+        $activeIndex * (100 / $totalOptions)}% +
       2px
   );
 `;
 
-const ModeButton = styled.button<{ isActive: boolean }>`
+const ModeButton = styled.button<{ $isActive: boolean }>`
   position: relative;
   z-index: 10;
   cursor: pointer;
@@ -64,30 +68,31 @@ const ButtonContent = styled.div`
   gap: 8px;
 `;
 
-const IconWrapper = styled.div<{ isActive: boolean }>`
+const IconWrapper = styled.div<{ $isActive: boolean }>`
   transition: all 0.3s ease;
 
   svg {
     width: 16px;
     height: 16px;
-    color: ${({ isActive }) => (isActive ? "white" : "#4b5563")};
-    transform: ${({ isActive }) => (isActive ? "scale(1.1)" : "scale(1)")};
+    color: ${({ $isActive }) => ($isActive ? "white" : "#4b5563")};
+    transform: ${({ $isActive }) => ($isActive ? "scale(1.1)" : "scale(1)")};
   }
 
   ${ModeButton}:hover & {
     svg {
-      color: ${({ isActive }) => (isActive ? "white" : "#1f2937")};
-      transform: ${({ isActive }) => (isActive ? "scale(1.1)" : "scale(1.05)")};
+      color: ${({ $isActive }) => ($isActive ? "white" : "#1f2937")};
+      transform: ${({ $isActive }) =>
+        $isActive ? "scale(1.1)" : "scale(1.05)"};
     }
   }
 `;
 
-const ButtonLabel = styled.span<{ isActive: boolean }>`
+const ButtonLabel = styled.span<{ $isActive: boolean }>`
   transition: color 0.3s ease;
-  color: ${({ isActive }) => (isActive ? "white" : "#4b5563")};
+  color: ${({ $isActive }) => ($isActive ? "white" : "#4b5563")};
 
   ${ModeButton}:hover & {
-    color: ${({ isActive }) => (isActive ? "white" : "#1f2937")};
+    color: ${({ $isActive }) => ($isActive ? "white" : "#1f2937")};
   }
 
   @media (max-width: 640px) {
@@ -95,7 +100,7 @@ const ButtonLabel = styled.span<{ isActive: boolean }>`
   }
 `;
 
-const HoverOverlay = styled.div<{ isActive: boolean }>`
+const HoverOverlay = styled.div<{ $isActive: boolean }>`
   position: absolute;
   inset: 0;
   border-radius: 12px;
@@ -104,11 +109,11 @@ const HoverOverlay = styled.div<{ isActive: boolean }>`
     rgba(107, 114, 128, 0.05),
     rgba(75, 85, 99, 0.05)
   );
-  opacity: ${({ isActive }) => (isActive ? "0" : "0")};
+  opacity: ${({ $isActive }) => ($isActive ? "0" : "0")};
   transition: opacity 0.3s ease;
 
   ${ModeButton}:hover & {
-    opacity: ${({ isActive }) => (isActive ? "0" : "1")};
+    opacity: ${({ $isActive }) => ($isActive ? "0" : "1")};
   }
 `;
 
@@ -137,8 +142,8 @@ export const ViewModeToggle: React.FC<IProps> = ({
     <ToggleContainer className={className}>
       <ToggleBackground>
         <ActiveSlider
-          activeIndex={activeIndex}
-          totalOptions={viewModesOptions.length}
+          $activeIndex={activeIndex}
+          $totalOptions={viewModesOptions.length}
         />
 
         {viewModesOptions.map(({ mode, icon, label }) => {
@@ -149,16 +154,16 @@ export const ViewModeToggle: React.FC<IProps> = ({
               key={mode}
               onClick={() => onChange(mode)}
               title={label}
-              isActive={isActive}
+              $isActive={isActive}
             >
               <ButtonContent>
-                <IconWrapper isActive={isActive}>
+                <IconWrapper $isActive={isActive}>
                   <Icon name={icon} />
                 </IconWrapper>
-                <ButtonLabel isActive={isActive}>{label}</ButtonLabel>
+                <ButtonLabel $isActive={isActive}>{label}</ButtonLabel>
               </ButtonContent>
 
-              <HoverOverlay isActive={isActive} />
+              <HoverOverlay $isActive={isActive} />
             </ModeButton>
           );
         })}

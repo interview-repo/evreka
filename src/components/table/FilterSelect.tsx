@@ -25,7 +25,10 @@ const SelectContainer = styled.div`
   position: relative;
 `;
 
-const SelectButton = styled.button<{ isOpen: boolean; hasSelection: boolean }>`
+const SelectButton = styled.button<{
+  $isOpen: boolean;
+  $hasSelection: boolean;
+}>`
   position: relative;
   width: 100%;
   height: 48px;
@@ -54,8 +57,8 @@ const SelectButton = styled.button<{ isOpen: boolean; hasSelection: boolean }>`
     border-color: #a78bfa;
   }
 
-  ${({ isOpen }) =>
-    isOpen &&
+  ${({ $isOpen }) =>
+    $isOpen &&
     `
     ring: 2px;
     ring-color: rgba(139, 92, 246, 0.2);
@@ -63,8 +66,8 @@ const SelectButton = styled.button<{ isOpen: boolean; hasSelection: boolean }>`
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   `}
 
-  ${({ hasSelection }) =>
-    hasSelection &&
+  ${({ $hasSelection }) =>
+    $hasSelection &&
     `
     border-color: #c4b5fd;
     background: rgba(243, 232, 255, 0.5);
@@ -77,8 +80,8 @@ const SelectContent = styled.div`
   gap: 12px;
 `;
 
-const SelectText = styled.span<{ hasSelection: boolean }>`
-  color: ${({ hasSelection }) => (hasSelection ? "#111827" : "#6b7280")};
+const SelectText = styled.span<{ $hasSelection: boolean }>`
+  color: ${({ $hasSelection }) => ($hasSelection ? "#111827" : "#6b7280")};
 `;
 
 const ActiveBadge = styled.div`
@@ -92,7 +95,7 @@ const ActiveBadge = styled.div`
   animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `;
 
-const ChevronWrapper = styled.div<{ isOpen: boolean }>`
+const ChevronWrapper = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -104,9 +107,10 @@ const ChevronWrapper = styled.div<{ isOpen: boolean }>`
   svg {
     width: 16px;
     height: 16px;
-    color: ${({ isOpen }) => (isOpen ? "#8b5cf6" : "#9ca3af")};
+    color: ${({ $isOpen }) => ($isOpen ? "#8b5cf6" : "#9ca3af")};
     transition: all 0.3s ease;
-    transform: ${({ isOpen }) => (isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+    transform: ${({ $isOpen }) =>
+      $isOpen ? "rotate(180deg)" : "rotate(0deg)"};
   }
 `;
 
@@ -136,7 +140,10 @@ const DropdownContent = styled.div`
   overflow: auto;
 `;
 
-const OptionButton = styled.button<{ isSelected: boolean; disabled?: boolean }>`
+const OptionButton = styled.button<{
+  $isSelected: boolean;
+  disabled?: boolean;
+}>`
   width: 100%;
   padding: 12px 16px;
   text-align: left;
@@ -163,8 +170,8 @@ const OptionButton = styled.button<{ isSelected: boolean; disabled?: boolean }>`
     }
   `}
 
-  ${({ isSelected, disabled }) =>
-    isSelected &&
+  ${({ $isSelected, disabled }) =>
+    $isSelected &&
     !disabled &&
     `
     background: #f3f4f6;
@@ -173,12 +180,12 @@ const OptionButton = styled.button<{ isSelected: boolean; disabled?: boolean }>`
   `}
 `;
 
-const OptionIcon = styled.div<{ isSelected: boolean; disabled?: boolean }>`
+const OptionIcon = styled.div<{ $isSelected: boolean; disabled?: boolean }>`
   svg {
     width: 16px;
     height: 16px;
-    color: ${({ disabled, isSelected }) =>
-      disabled ? "#9ca3af" : isSelected ? "#8b5cf6" : "#6b7280"};
+    color: ${({ disabled, $isSelected }) =>
+      disabled ? "#9ca3af" : $isSelected ? "#8b5cf6" : "#6b7280"};
   }
 `;
 
@@ -210,8 +217,8 @@ export const FilterSelect: React.FC<IProps> = ({
         <SelectButton
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          isOpen={isOpen}
-          hasSelection={!!hasSelection}
+          $isOpen={isOpen}
+          $hasSelection={!!hasSelection}
         >
           <SelectContent>
             {selectedOption?.icon && (
@@ -222,14 +229,14 @@ export const FilterSelect: React.FC<IProps> = ({
                 }`}
               />
             )}
-            <SelectText hasSelection={!!hasSelection}>
+            <SelectText $hasSelection={!!hasSelection}>
               {selectedOption ? selectedOption.label : placeholder}
             </SelectText>
           </SelectContent>
 
           {hasSelection && <ActiveBadge />}
 
-          <ChevronWrapper isOpen={isOpen}>
+          <ChevronWrapper $isOpen={isOpen}>
             <Icon name="ChevronDownIcon" />
           </ChevronWrapper>
         </SelectButton>
@@ -249,11 +256,11 @@ export const FilterSelect: React.FC<IProps> = ({
                       setIsOpen(false);
                     }}
                     disabled={option.disabled}
-                    isSelected={option.value === value}
+                    $isSelected={option.value === value}
                   >
                     {option.icon && (
                       <OptionIcon
-                        isSelected={option.value === value}
+                        $isSelected={option.value === value}
                         disabled={option.disabled}
                       >
                         <Icon name={option.icon as any} />

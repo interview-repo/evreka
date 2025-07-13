@@ -9,42 +9,20 @@ interface IProps {
   className?: string;
 }
 
-const SearchContainer = styled.div`
-  position: relative;
-
-  &:hover {
-    .search-icon {
-      color: #4b5563;
-    }
-  }
-`;
-
-const SearchIconWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  padding-left: 16px;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-  z-index: 10;
-`;
-
-const SearchIcon = styled.div<{ isFocused: boolean; hasValue: boolean }>`
+const SearchIcon = styled.div<{ $isFocused: boolean; $hasValue: boolean }>`
   transition: all 0.3s ease;
 
   svg {
     width: 20px;
     height: 20px;
-    color: ${({ isFocused, hasValue }) =>
-      isFocused || hasValue ? "#8b5cf6" : "#9ca3af"};
-    transform: ${({ isFocused, hasValue }) =>
-      isFocused || hasValue ? "scale(1.1)" : "scale(1)"};
+    color: ${({ $isFocused, $hasValue }) =>
+      $isFocused || $hasValue ? "#8b5cf6" : "#9ca3af"};
+    transform: ${({ $isFocused, $hasValue }) =>
+      $isFocused || $hasValue ? "scale(1.1)" : "scale(1)"};
   }
 `;
 
-const SearchInputField = styled.input<{ isFocused: boolean }>`
+const SearchInputField = styled.input<{ $isFocused: boolean }>`
   width: 100%;
   height: 48px;
   padding-left: 48px;
@@ -77,11 +55,46 @@ const SearchInputField = styled.input<{ isFocused: boolean }>`
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 
-  ${({ isFocused }) =>
-    isFocused &&
+  ${({ $isFocused }) =>
+    $isFocused &&
     `
     transform: scale(1.02);
   `}
+`;
+
+const FocusOverlay = styled.div<{ $isFocused: boolean }>`
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(139, 92, 246, 0.05),
+    rgba(99, 102, 241, 0.05)
+  );
+  opacity: ${({ $isFocused }) => ($isFocused ? 1 : 0)};
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  &:hover {
+    .search-icon {
+      color: #4b5563;
+    }
+  }
+`;
+
+const SearchIconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding-left: 16px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
 `;
 
 const ClearButtonWrapper = styled.button`
@@ -121,20 +134,6 @@ const ClearButton = styled.div`
   }
 `;
 
-const FocusOverlay = styled.div<{ isFocused: boolean }>`
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  background: linear-gradient(
-    to right,
-    rgba(139, 92, 246, 0.05),
-    rgba(99, 102, 241, 0.05)
-  );
-  opacity: ${({ isFocused }) => (isFocused ? 1 : 0)};
-`;
-
 export const SearchInput: React.FC<IProps> = ({
   value,
   onChange,
@@ -148,8 +147,8 @@ export const SearchInput: React.FC<IProps> = ({
       {/* Search Icon */}
       <SearchIconWrapper>
         <SearchIcon
-          isFocused={isFocused}
-          hasValue={!!value}
+          $isFocused={isFocused}
+          $hasValue={!!value}
           className="search-icon"
         >
           <Icon name="MagnifyingGlassIcon" />
@@ -166,7 +165,7 @@ export const SearchInput: React.FC<IProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        isFocused={isFocused}
+        $isFocused={isFocused}
       />
 
       {/* Clear Button */}
@@ -179,7 +178,7 @@ export const SearchInput: React.FC<IProps> = ({
       )}
 
       {/* Focus Overlay */}
-      <FocusOverlay isFocused={isFocused} />
+      <FocusOverlay $isFocused={isFocused} />
     </SearchContainer>
   );
 };

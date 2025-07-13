@@ -36,7 +36,7 @@ const GradientOverlay = styled.div`
 `;
 
 const PaginationButton = styled.button<{
-  variant?: "primary" | "secondary" | "ghost";
+  $variant?: "primary" | "secondary" | "ghost";
 }>`
   display: flex;
   align-items: center;
@@ -58,8 +58,8 @@ const PaginationButton = styled.button<{
     cursor: not-allowed;
   }
 
-  ${({ variant }) => {
-    switch (variant) {
+  ${({ $variant }) => {
+    switch ($variant) {
       case "primary":
         return `
           color: white;
@@ -201,7 +201,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <SmallButton
               onClick={() => pagination.goTo(1, onPrevious, onNext)}
               disabled={!pagination.canFirst}
-              variant="ghost"
+              $variant="ghost"
               className="hidden sm:flex"
               title="First page"
             >
@@ -212,7 +212,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <PaginationButton
               onClick={onPrevious}
               disabled={!pagination.canPrev}
-              variant="secondary"
+              $variant="secondary"
             >
               <Icon name="ChevronLeftIcon" className="size-4" />
               <span className="hidden sm:inline">Previous</span>
@@ -242,7 +242,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <PaginationButton
               onClick={onNext}
               disabled={!pagination.canNext}
-              variant="primary"
+              $variant="primary"
             >
               <span className="hidden sm:inline">Next</span>
               <Icon name="ChevronRightIcon" className="size-4" />
@@ -251,7 +251,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <SmallButton
               onClick={() => pagination.goTo(totalPages, onPrevious, onNext)}
               disabled={!pagination.canLast}
-              variant="ghost"
+              $variant="ghost"
               className="hidden sm:flex"
               title="Last page"
             >

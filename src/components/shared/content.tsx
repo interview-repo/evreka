@@ -49,24 +49,24 @@ const GridContainer = styled.div`
 `;
 
 const GridContent = styled.div<{
-  gridCols: { sm?: number; md?: number; lg?: number; xl?: number };
+  $gridCols: { sm?: number; md?: number; lg?: number; xl?: number };
 }>`
   display: grid;
   gap: 24px;
   padding: 24px;
 
-  grid-template-columns: repeat(${(props) => props.gridCols.sm || 1}, 1fr);
+  grid-template-columns: repeat(${(props) => props.$gridCols.sm || 1}, 1fr);
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(${(props) => props.gridCols.md || 2}, 1fr);
+    grid-template-columns: repeat(${(props) => props.$gridCols.md || 2}, 1fr);
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(${(props) => props.gridCols.lg || 3}, 1fr);
+    grid-template-columns: repeat(${(props) => props.$gridCols.lg || 3}, 1fr);
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: repeat(${(props) => props.gridCols.xl || 4}, 1fr);
+    grid-template-columns: repeat(${(props) => props.$gridCols.xl || 4}, 1fr);
   }
 `;
 
@@ -94,7 +94,7 @@ export const ContentArea = <T extends { id: string }>({
       case "grid":
         return (
           <GridContainer>
-            <GridContent gridCols={gridCols}>
+            <GridContent $gridCols={gridCols}>
               {data.map((item) => (
                 <GridItem key={item.id}>{renderGrid?.(item)}</GridItem>
               ))}

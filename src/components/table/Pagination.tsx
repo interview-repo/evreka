@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Icon } from "../shared/Icon";
+import { getPagination } from "@/utils/getPagination";
 
 interface PaginationProps {
   currentPage: number;
@@ -34,7 +35,9 @@ const GradientOverlay = styled.div`
   filter: blur(24px);
 `;
 
-const PaginationButton = styled.button<{ variant?: "primary" | "secondary" | "ghost" }>`
+const PaginationButton = styled.button<{
+  variant?: "primary" | "secondary" | "ghost";
+}>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -102,7 +105,7 @@ const SmallButton = styled(PaginationButton)`
   font-size: 12px;
 `;
 
-const PageNumberButton = styled.button<{ isActive?: boolean }>`
+const PageNumberButton = styled.button<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,8 +121,8 @@ const PageNumberButton = styled.button<{ isActive?: boolean }>`
     transform: scale(1.05);
   }
 
-  ${({ isActive }) =>
-    isActive
+  ${({ $isActive }) =>
+    $isActive
       ? `
         color: white;
         background: linear-gradient(to right, #9333ea, #6366f1);
@@ -158,70 +161,12 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPrevious,
   onNext,
 }) => {
-  const startItem = Math.max(1, (currentPage - 1) * itemsPerPage + 1);
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-  function generatePageNumbers() {
-    const maxVisible = 7;
-
-    if (totalPages <= maxVisible) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-
-    const pages: (number | string)[] = [];
-    const halfVisible = Math.floor(maxVisible / 2);
-
-    pages.push(1);
-
-    let startPage = Math.max(2, currentPage - halfVisible);
-    let endPage = Math.min(totalPages - 1, currentPage + halfVisible);
-
-    if (currentPage <= halfVisible + 1) {
-      endPage = Math.min(totalPages - 1, maxVisible - 1);
-    }
-
-    if (currentPage >= totalPages - halfVisible) {
-      startPage = Math.max(2, totalPages - maxVisible + 2);
-    }
-
-    if (startPage > 2) {
-      pages.push("...");
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-
-    if (endPage < totalPages - 1) {
-      pages.push("...");
-    }
-
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-    return pages;
-  }
-
-  const pageNumbers = generatePageNumbers();
-  const canGoFirst = currentPage > 1;
-  const canGoLast = currentPage < totalPages;
-  const canGoPrev = currentPage > 1;
-  const canGoNext = currentPage < totalPages;
-
-  const goToPage = (page: number) => {
-    if (page < currentPage) {
-      const diff = currentPage - page;
-      for (let i = 0; i < diff; i++) {
-        onPrevious();
-      }
-    } else if (page > currentPage) {
-      const diff = page - currentPage;
-      for (let i = 0; i < diff; i++) {
-        onNext();
-      }
-    }
-  };
+  const pagination = getPagination({
+    page: currentPage,
+    perPage: itemsPerPage,
+    total: totalItems,
+    maxVisible: 7,
+  });
 
   return (
     <PaginationContainer>
@@ -232,8 +177,12 @@ export const Pagination: React.FC<PaginationProps> = ({
           <div className="flex items-center gap-6">
             <div className="text-sm text-gray-700 font-medium">
               Showing{" "}
-              <span className="font-bold text-gray-900">{startItem}</span> -{" "}
-              <span className="font-bold text-gray-900">{endItem}</span> of{" "}
+              <span className="font-bold text-gray-900">
+                {pagination.start}
+              </span>{" "}
+              -{" "}
+              <span className="font-bold text-gray-900">{pagination.end}</span>{" "}
+              of{" "}
               <span className="font-bold text-purple-600">
                 {totalItems.toLocaleString()}
               </span>{" "}
@@ -250,8 +199,8 @@ export const Pagination: React.FC<PaginationProps> = ({
 
           <div className="flex items-center gap-2">
             <SmallButton
-              onClick={() => goToPage(1)}
-              disabled={!canGoFirst}
+              onClick={() => pagination.goTo(1, onPrevious, onNext)}
+              disabled={!pagination.canFirst}
               variant="ghost"
               className="hidden sm:flex"
               title="First page"
@@ -262,7 +211,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
             <PaginationButton
               onClick={onPrevious}
-              disabled={!canGoPrev}
+              disabled={!pagination.canPrev}
               variant="secondary"
             >
               <Icon name="ChevronLeftIcon" className="size-4" />
@@ -270,7 +219,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             </PaginationButton>
 
             <div className="hidden md:flex items-center gap-1 mx-2">
-              {pageNumbers.map((page, index) => (
+              {pagination.pages.map((page, index) => (
                 <React.Fragment key={index}>
                   {page === "..." ? (
                     <span className="flex items-center justify-center w-10 h-10 text-gray-400 text-sm">
@@ -278,8 +227,10 @@ export const Pagination: React.FC<PaginationProps> = ({
                     </span>
                   ) : (
                     <PageNumberButton
-                      onClick={() => goToPage(page as number)}
-                      isActive={page === currentPage}
+                      onClick={() =>
+                        pagination.goTo(page as number, onPrevious, onNext)
+                      }
+                      $isActive={page === currentPage}
                     >
                       {page}
                     </PageNumberButton>
@@ -290,7 +241,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
             <PaginationButton
               onClick={onNext}
-              disabled={!canGoNext}
+              disabled={!pagination.canNext}
               variant="primary"
             >
               <span className="hidden sm:inline">Next</span>
@@ -298,8 +249,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             </PaginationButton>
 
             <SmallButton
-              onClick={() => goToPage(totalPages)}
-              disabled={!canGoLast}
+              onClick={() => pagination.goTo(totalPages, onPrevious, onNext)}
+              disabled={!pagination.canLast}
               variant="ghost"
               className="hidden sm:flex"
               title="Last page"

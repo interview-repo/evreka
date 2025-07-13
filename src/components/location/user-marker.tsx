@@ -54,11 +54,11 @@ const UserEmail = styled.p`
   margin: 0;
 `;
 
-const StatusDot = styled.div<{ active: boolean }>`
+const StatusDot = styled.div<{ $active: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: ${({ active }) => (active ? "#4ade80" : "#d1d5db")};
+  background: ${({ $active }) => ($active ? "#4ade80" : "#d1d5db")};
 `;
 
 const PopupBody = styled.div`
@@ -107,7 +107,7 @@ const StatusLabel = styled.span`
   font-size: 14px;
 `;
 
-const StatusBadge = styled.span<{ active: boolean }>`
+const StatusBadge = styled.span<{ $active: boolean }>`
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -117,8 +117,8 @@ const StatusBadge = styled.span<{ active: boolean }>`
   font-weight: 500;
   border: 1px solid;
 
-  ${({ active }) =>
-    active
+  ${({ $active }) =>
+    $active
       ? `
         background: #ecfdf5;
         color: #059669;
@@ -131,11 +131,11 @@ const StatusBadge = styled.span<{ active: boolean }>`
       `}
 `;
 
-const StatusBadgeDot = styled.div<{ active: boolean }>`
+const StatusBadgeDot = styled.div<{ $active: boolean }>`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${({ active }) => (active ? "#10b981" : "#9ca3af")};
+  background: ${({ $active }) => ($active ? "#10b981" : "#9ca3af")};
 `;
 
 const DirectionsButton = styled.button`
@@ -178,7 +178,7 @@ export const UserMarker: React.FC<{
                 <UserName>{user.name}</UserName>
                 <UserEmail>{user.email}</UserEmail>
               </UserInfo>
-              <StatusDot active={user.active} />
+              <StatusDot $active={user.active} />
             </HeaderContent>
           </PopupHeader>
 
@@ -202,8 +202,8 @@ export const UserMarker: React.FC<{
 
             <StatusRow>
               <StatusLabel>Status</StatusLabel>
-              <StatusBadge active={user.active}>
-                <StatusBadgeDot active={user.active} />
+              <StatusBadge $active={user.active}>
+                <StatusBadgeDot $active={user.active} />
                 {user.active ? "Active" : "Inactive"}
               </StatusBadge>
             </StatusRow>

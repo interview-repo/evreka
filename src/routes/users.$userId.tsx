@@ -4,7 +4,7 @@ import { UserDetailPage } from "@/components/user/detail";
 import { useUserModal } from "@/hooks/users/useUserModal";
 import { UserModal } from "@/components/user/modal";
 
-export const Route = createFileRoute("/user/$userId")({
+export const Route = createFileRoute("/users/$userId")({
   component: UserDetail,
 
   loader: async ({ context, params }) => {

@@ -19,14 +19,14 @@ const StrengthBars = styled.div`
   gap: 4px;
 `;
 
-const StrengthBar = styled.div<{ active: boolean; level: string }>`
+const StrengthBar = styled.div<{ $active: boolean; $level: string }>`
   height: 4px;
   flex: 1;
   border-radius: 2px;
-  background: ${({ active, level }) => {
-    if (!active) return "#e5e7eb";
+  background: ${({ $active, $level }) => {
+    if (!$active) return "#e5e7eb";
 
-    switch (level) {
+    switch ($level) {
       case "weak":
         return "#ef4444";
       case "medium":
@@ -41,8 +41,8 @@ const StrengthBar = styled.div<{ active: boolean; level: string }>`
   }};
   transition: all 0.2s ease;
 
-  ${({ active }) =>
-    active &&
+  ${({ $active }) =>
+    $active &&
     css`
       animation: ${strengthFill} 0.3s ease-out;
     `}
@@ -64,8 +64,8 @@ const ChecksContainer = styled.div`
   gap: 8px;
 `;
 
-const CheckItem = styled.span<{ passed: boolean }>`
-  color: ${({ passed }) => (passed ? "#059669" : "#9ca3af")};
+const CheckItem = styled.span<{ $passed: boolean }>`
+  color: ${({ $passed }) => ($passed ? "#059669" : "#9ca3af")};
   transition: color 0.2s ease;
 `;
 
@@ -101,8 +101,8 @@ export const PasswordStrength: React.FC<{
         {Array.from({ length: 5 }, (_, i) => (
           <StrengthBar
             key={i}
-            active={i < strength.strength}
-            level={strength.level}
+            $active={i < strength.strength}
+            $level={strength.level}
           />
         ))}
       </StrengthBars>
@@ -110,7 +110,7 @@ export const PasswordStrength: React.FC<{
         <StrengthLabel>{strengthConfig[strength.level].label}</StrengthLabel>
         <ChecksContainer>
           {Object.entries(strength.checks).map(([key, passed]) => (
-            <CheckItem key={key} passed={passed}>
+            <CheckItem key={key} $passed={passed}>
               {checkLabels[key as keyof typeof checkLabels]}
             </CheckItem>
           ))}

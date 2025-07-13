@@ -11,7 +11,7 @@ export const useUsersList = () => {
 
   const handleViewUser = useCallback(
     ({ id }: User) => {
-      navigate({ to: `/user/${id}` });
+      navigate({ to: `/users/${id}` });
     },
     [navigate]
   );

@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import useUsersApi, { usersApi } from "@/api/client";
 import { UserDetailPage } from "@/components/user/detail";
+import { useUserModal } from "@/hooks/users/useUserModal";
+import { UserModal } from "@/components/user/modal";
 
 export const Route = createFileRoute("/user/$userId")({
   component: UserDetail,
@@ -23,24 +25,30 @@ function UserDetail() {
 
   const { data: userResponse, isLoading, error } = usersApi.useDetail(userId);
 
+  const userModal = useUserModal();
+
   const handleGoBack = () => {
     navigate({ to: "/" });
   };
 
-  const handleEdit = () => {
-    navigate({
-      to: "/",
-      search: { editUser: userId },
-    });
-  };
-
   return (
-    <UserDetailPage
-      user={userResponse?.data}
-      isLoading={isLoading}
-      error={error}
-      onBack={handleGoBack}
-      onEdit={handleEdit}
-    />
+    <div>
+      <UserDetailPage
+        user={userResponse?.data}
+        isLoading={isLoading}
+        error={error}
+        onBack={handleGoBack}
+        onEdit={userModal.openEditModal}
+      />
+      
+      <UserModal
+        isOpen={userModal.modalState.isOpen}
+        mode={userModal.modalState.mode}
+        user={userModal.modalState.user}
+        onClose={userModal.closeModal}
+        onSubmit={userModal.handleSubmit}
+        isLoading={userModal.isSubmitting}
+      />
+    </div>
   );
 }

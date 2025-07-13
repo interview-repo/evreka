@@ -10,7 +10,7 @@ interface IProps {
   isLoading: boolean;
   error?: Error | null;
   onBack: () => void;
-  onEdit: () => void;
+  onEdit: (user: User) => void;
 }
 
 // Keyframes
@@ -141,7 +141,7 @@ const UserName = styled.h1`
   -webkit-text-fill-color: transparent;
 `;
 
-const StatusBadge = styled.div<{ active: boolean }>`
+const StatusBadge = styled.div<{ $active: boolean }>`
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -150,8 +150,8 @@ const StatusBadge = styled.div<{ active: boolean }>`
   font-size: 12px;
   font-weight: 500;
 
-  ${({ active }) =>
-    active
+  ${({ $active }) =>
+    $active
       ? `
         background: #ecfdf5;
         color: #059669;
@@ -164,11 +164,11 @@ const StatusBadge = styled.div<{ active: boolean }>`
       `}
 `;
 
-const StatusDot = styled.div<{ active: boolean }>`
+const StatusDot = styled.div<{ $active: boolean }>`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${({ active }) => (active ? "#10b981" : "#9ca3af")};
+  background: ${({ $active }) => ($active ? "#10b981" : "#9ca3af")};
 `;
 
 const UserEmail = styled.p`
@@ -493,8 +493,8 @@ export const UserDetailPage: React.FC<IProps> = ({
             <UserInfo>
               <UserNameRow>
                 <UserName>{user.name}</UserName>
-                <StatusBadge active={user.active}>
-                  <StatusDot active={user.active} />
+                <StatusBadge $active={user.active}>
+                  <StatusDot $active={user.active} />
                   {user.active ? "Active" : "Inactive"}
                 </StatusBadge>
               </UserNameRow>

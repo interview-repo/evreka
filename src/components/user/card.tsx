@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/date-format";
 
 interface IProps {
   user: User;
-  onEdit: () => void;
+  onEdit: (user: User) => void;
 }
 
 const DetailCard = styled.div`
@@ -169,7 +169,7 @@ export const UserDetailCard: React.FC<IProps> = ({ user, onEdit }) => {
           </CoordinatesContainer>
         </CoordinatesSection>
 
-        <EditButton onClick={onEdit}>Edit User</EditButton>
+        <EditButton onClick={() => onEdit(user)}>Edit User</EditButton>
       </DetailsSection>
     </DetailCard>
   );

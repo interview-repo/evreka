@@ -3,7 +3,6 @@ import { useUsersList } from "@/hooks/users/useUsersList";
 import { ControlPanel } from "@/components/shared/control-panel";
 import { ContentArea } from "@/components/shared/content";
 import { Pagination } from "@/components/table/pagination";
-import { Loading } from "@/components/shared/loading";
 import { Header } from "@/components/shared/header";
 import { Icon } from "@/components/shared/Icon";
 import { ActionButton } from "@/components/shared/button";
@@ -15,14 +14,8 @@ export const Route = createFileRoute("/")({
 });
 
 export default function UsersPage() {
-  const {
-    table,
-    filters,
-    renderGrid,
-    isLoading,
-    hasActiveFilters,
-    handleClearFilters,
-  } = useUsersList();
+  const { table, filters, renderGrid, hasActiveFilters, handleClearFilters } =
+    useUsersList();
 
   const userModal = useUserModal();
 
@@ -74,15 +67,20 @@ export default function UsersPage() {
         onClearFilters={handleClearFilters}
       />
 
-      {isLoading && <Loading message="Loading users..." />}
-
       <ContentArea
         viewMode={table.state.viewMode}
         data={table.data.display}
+        isLoading={table.state.isLoading}
+        error={table.state.error}
         renderTable={({ onRowClick }) => (
           <table.Table onRowClick={onRowClick} />
         )}
-        renderGrid={renderGrid}
+        renderGrid={(user) => renderGrid(user, userModal.openEditModal)}
+        gridConfig={{
+          itemsPerRow: 4,
+          itemMinWidth: 280,
+          gap: 24,
+        }}
       />
 
       {table.state.isPaginated && table.data.stats.totalPages > 1 && (

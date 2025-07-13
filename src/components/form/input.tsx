@@ -47,10 +47,10 @@ const IconLeft = styled.div`
 `;
 
 const InputBase = styled.input<{
-  hasIcon?: boolean;
-  isPassword?: boolean;
-  hasError?: boolean;
-  isFocused?: boolean;
+  $hasIcon?: boolean;
+  $isPassword?: boolean;
+  $hasError?: boolean;
+  $isFocused?: boolean;
   disabled?: boolean;
 }>`
   width: 100%;
@@ -66,12 +66,12 @@ const InputBase = styled.input<{
   color: #374151;
 
   ${(props) =>
-    props.hasIcon &&
+    props.$hasIcon &&
     css`
       padding-left: 2.5rem;
     `}
   ${(props) =>
-    props.isPassword &&
+    props.$isPassword &&
     css`
       padding-right: 2.5rem;
     `}
@@ -84,7 +84,7 @@ const InputBase = styled.input<{
       cursor: not-allowed;
     `}
   ${(props) =>
-    props.hasError &&
+    props.$hasError &&
     css`
       border-color: #fca5a5; /* border-red-300 */
       background: #fef2f2; /* bg-red-50 */
@@ -94,15 +94,15 @@ const InputBase = styled.input<{
       }
     `}
   ${(props) =>
-    !props.hasError &&
-    props.isFocused &&
+    !props.$hasError &&
+    props.$isFocused &&
     css`
       border-color: #3b82f6; /* border-blue-500 */
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     `}
   ${(props) =>
-    !props.hasError &&
-    !props.isFocused &&
+    !props.$hasError &&
+    !props.$isFocused &&
     !props.disabled &&
     css`
       &:hover {
@@ -193,10 +193,10 @@ export const FormInput: React.FC<IProps> = ({
           disabled={disabled}
           placeholder={placeholder}
           required={required}
-          hasIcon={!!icon}
-          isPassword={isPassword}
-          hasError={hasError}
-          isFocused={isFocused}
+          $hasIcon={!!icon}
+          $isPassword={isPassword}
+          $hasError={hasError}
+          $isFocused={isFocused}
         />
         {isPassword && (
           <PasswordToggle

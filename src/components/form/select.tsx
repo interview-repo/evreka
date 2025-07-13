@@ -34,8 +34,8 @@ const SelectContainer = styled.div`
 
 const SelectButton = styled.button<{
   disabled: boolean;
-  hasError: boolean;
-  isOpen: boolean;
+  $hasError: boolean;
+  $isOpen: boolean;
 }>`
   width: 100%;
   padding: 10px 12px;
@@ -56,8 +56,8 @@ const SelectButton = styled.button<{
     cursor: not-allowed;
   `}
 
-  ${({ hasError, disabled }) =>
-    hasError &&
+  ${({ $hasError, disabled }) =>
+    $hasError &&
     !disabled &&
     `
     border-color: #fca5a5;
@@ -68,19 +68,19 @@ const SelectButton = styled.button<{
     }
   `}
 
-  ${({ isOpen, hasError, disabled }) =>
-    isOpen &&
-    !hasError &&
+  ${({ $isOpen, $hasError, disabled }) =>
+    $isOpen &&
+    !$hasError &&
     !disabled &&
     `
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
   `}
 
-  ${({ disabled, hasError, isOpen }) =>
+  ${({ disabled, $hasError, $isOpen }) =>
     !disabled &&
-    !hasError &&
-    !isOpen &&
+    !$hasError &&
+    !$isOpen &&
     `
     border-color: #d1d5db;
     
@@ -102,15 +102,15 @@ const SelectText = styled.div`
   gap: 8px;
 `;
 
-const SelectedLabel = styled.span<{ hasValue: boolean }>`
-  color: ${({ hasValue }) => (hasValue ? "#111827" : "#6b7280")};
+const SelectedLabel = styled.span<{ $hasValue: boolean }>`
+  color: ${({ $hasValue }) => ($hasValue ? "#111827" : "#6b7280")};
 `;
 
-const ChevronIcon = styled.div<{ isOpen: boolean }>`
+const ChevronIcon = styled.div<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   transition: transform 0.2s ease;
-  transform: ${({ isOpen }) => (isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+  transform: ${({ $isOpen }) => ($isOpen ? "rotate(180deg)" : "rotate(0deg)")};
 
   svg {
     width: 16px;
@@ -247,8 +247,8 @@ export const FormSelect: React.FC<IProps> = ({
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
-          hasError={hasError}
-          isOpen={isOpen}
+          $hasError={hasError}
+          $isOpen={isOpen}
         >
           <SelectContent>
             <SelectText>
@@ -258,11 +258,11 @@ export const FormSelect: React.FC<IProps> = ({
                   className="size-4 text-gray-500"
                 />
               )}
-              <SelectedLabel hasValue={!!selectedOption}>
+              <SelectedLabel $hasValue={!!selectedOption}>
                 {selectedOption ? selectedOption.label : placeholder}
               </SelectedLabel>
             </SelectText>
-            <ChevronIcon isOpen={isOpen}>
+            <ChevronIcon $isOpen={isOpen}>
               <Icon name="ChevronDownIcon" />
             </ChevronIcon>
           </SelectContent>

@@ -12,11 +12,11 @@ interface IProps {
   user: User;
 }
 
-const MapWrapper = styled.div<{ isFullscreen: boolean }>`
+const MapWrapper = styled.div<{ $isFullscreen: boolean }>`
   position: relative;
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(12px);
-  border-radius: ${({ isFullscreen }) => (isFullscreen ? "0" : "16px")};
+  border-radius: ${({ $isFullscreen }) => ($isFullscreen ? "0" : "16px")};
   border: 1px solid rgba(229, 231, 235, 0.6);
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(17, 24, 39, 0.05);
@@ -97,7 +97,7 @@ const StyleToggleContainer = styled.div`
   border: 1px solid rgba(229, 231, 235, 0.6);
 `;
 
-const StyleButton = styled.button<{ active: boolean }>`
+const StyleButton = styled.button<{ $active: boolean }>`
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 500;
@@ -106,8 +106,8 @@ const StyleButton = styled.button<{ active: boolean }>`
   border: none;
   cursor: pointer;
 
-  ${({ active }) =>
-    active
+  ${({ $active }) =>
+    $active
       ? `
         background: #2563eb;
         color: white;
@@ -132,11 +132,11 @@ const MapStats = styled.div`
   font-size: 14px;
 `;
 
-const StatItem = styled.div<{ variant?: "status" }>`
+const StatItem = styled.div<{ $variant?: "status" }>`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: ${({ variant }) => (variant === "status" ? "inherit" : "#4b5563")};
+  color: ${({ $variant }) => ($variant === "status" ? "inherit" : "#4b5563")};
 
   svg {
     width: 16px;
@@ -144,16 +144,16 @@ const StatItem = styled.div<{ variant?: "status" }>`
   }
 `;
 
-const StatusDot = styled.div<{ active: boolean }>`
+const StatusDot = styled.div<{ $active: boolean }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${({ active }) => (active ? "#10b981" : "#9ca3af")};
+  background: ${({ $active }) => ($active ? "#10b981" : "#9ca3af")};
 `;
 
-const MapContainer_Styled = styled.div<{ isFullscreen: boolean }>`
+const MapContainer_Styled = styled.div<{ $isFullscreen: boolean }>`
   position: relative;
-  height: ${({ isFullscreen }) => (isFullscreen ? "100vh" : "600px")};
+  height: ${({ $isFullscreen }) => ($isFullscreen ? "100vh" : "600px")};
 `;
 
 const MapControls = styled.div`
@@ -175,7 +175,7 @@ const ControlGroup = styled.div`
   overflow: hidden;
 `;
 
-const ControlButton = styled.button<{ hasBottomBorder?: boolean }>`
+const ControlButton = styled.button<{ $hasBottomBorder?: boolean }>`
   display: block;
   width: 100%;
   padding: 12px;
@@ -184,8 +184,8 @@ const ControlButton = styled.button<{ hasBottomBorder?: boolean }>`
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-bottom: ${({ hasBottomBorder }) =>
-    hasBottomBorder ? "1px solid #f3f4f6" : "none"};
+  border-bottom: ${({ $hasBottomBorder }) =>
+    $hasBottomBorder ? "1px solid #f3f4f6" : "none"};
 
   &:hover {
     background: #f9fafb;
@@ -283,7 +283,7 @@ const FooterRight = styled.div`
   gap: 8px;
 `;
 
-const FooterButton = styled.button<{ variant?: "primary" }>`
+const FooterButton = styled.button<{ $variant?: "primary" }>`
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -295,8 +295,8 @@ const FooterButton = styled.button<{ variant?: "primary" }>`
   cursor: pointer;
   transition: all 0.2s ease;
 
-  ${({ variant }) =>
-    variant === "primary"
+  ${({ $variant }) =>
+    $variant === "primary"
       ? `
         background: #2563eb;
         color: white;
@@ -382,7 +382,7 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
   }, []);
 
   return (
-    <MapWrapper ref={containerRef} isFullscreen={isFullscreen}>
+    <MapWrapper ref={containerRef} $isFullscreen={isFullscreen}>
       <MapHeader>
         <HeaderTop>
           <HeaderLeft>
@@ -402,7 +402,7 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
               {Object.entries(mapStyles).map(([style, _]) => (
                 <StyleButton
                   key={style}
-                  active={mapStyle === style}
+                  $active={mapStyle === style}
                   onClick={() => setMapStyle(style)}
                 >
                   {style.charAt(0).toUpperCase() + style.slice(1)}
@@ -425,16 +425,16 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
             </span>
           </StatItem>
           <StatItem
-            variant="status"
+            $variant="status"
             style={{ color: user.active ? "#059669" : "#6b7280" }}
           >
-            <StatusDot active={user.active} />
+            <StatusDot $active={user.active} />
             <span>{user.active ? "User Active" : "User Inactive"}</span>
           </StatItem>
         </MapStats>
       </MapHeader>
 
-      <MapContainer_Styled isFullscreen={isFullscreen}>
+      <MapContainer_Styled $isFullscreen={isFullscreen}>
         <MapContainer
           style={{ height: "100%", width: "100%" }}
           className="map-container"
@@ -455,7 +455,7 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
 
         <MapControls>
           <ControlGroup>
-            <ControlButton onClick={handleZoomIn} hasBottomBorder>
+            <ControlButton onClick={handleZoomIn} $hasBottomBorder>
               <Icon name="PlusIcon" />
             </ControlButton>
             <ControlButton onClick={handleZoomOut}>
@@ -466,7 +466,7 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
           <ControlGroup>
             <ControlButton
               onClick={handleRecenter}
-              hasBottomBorder
+              $hasBottomBorder
               title="Recenter on user"
             >
               <Icon name="ArrowPathIcon" />
@@ -511,7 +511,7 @@ export const UserLocationMap: React.FC<IProps> = ({ user }) => {
               <Icon name="ShareIcon" />
               Share Location
             </FooterButton>
-            <FooterButton variant="primary">
+            <FooterButton $variant="primary">
               <Icon name="ArrowTopRightOnSquareIcon" />
               Open in Maps
             </FooterButton>

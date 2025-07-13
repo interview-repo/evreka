@@ -4,6 +4,9 @@ import { ControlPanel } from "@/components/shared/control-panel";
 import { ContentArea } from "@/components/shared/content";
 import { Pagination } from "@/components/table/Pagination";
 import { Loading } from "@/components/shared/loading";
+import { Header } from "@/components/shared/header";
+import { Icon } from "@/components/shared/Icon";
+import { ActionButton } from "@/components/shared/button";
 
 export const Route = createFileRoute("/")({
   component: UsersPage,
@@ -39,6 +42,17 @@ export default function UsersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-indigo-100">
+      <Header
+        title="Users CRM"
+        description="Manage your team and their roles"
+        actionButton={
+          <ActionButton onClick={() => {}} disabled={isLoading}>
+            <Icon name="PlusIcon" />
+            Add User
+          </ActionButton>
+        }
+      />
+
       {/* Control Panel */}
       <ControlPanel
         search={table.state.search}

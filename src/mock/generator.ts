@@ -184,7 +184,8 @@ export class MockServer<T extends BaseEntity> {
             return HttpResponse.json({ error: "Not found" }, { status: 404 });
           }
 
-          const body = await request.json();
+          const bodyText = await request.text();
+          const body = JSON.parse(bodyText);
           const updated = {
             ...(existing as Record<string, any>),
             ...(body as Record<string, any>),

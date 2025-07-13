@@ -126,15 +126,19 @@ export const useApi = <T extends BaseEntity, F extends Filter<T> = Filter<T>>(
 
   // Update Mutation
   const useUpdate = (
-    options?: Partial<UseMutationOptions<Response<T>, Error, UpdatePayload<T>>>
+    options?: Partial<
+      UseMutationOptions<Response<T>, Error, T & { id: string }>
+    >
   ) => {
     return useMutation({
-      mutationFn: ({ id, data }: UpdatePayload<T>) =>
-        api.put<Response<T>>(buildUrl(resource, id), data),
-      onSuccess: (result, { id }, ...args) => {
-        queryClient.setQueryData(keys.detail(id), result);
+      mutationFn: (data: T & { id: string }) => {
+        const { id, ...updateData } = data;
+        return api.put<Response<T>>(buildUrl(resource, id), updateData);
+      },
+      onSuccess: (result, data, ...args) => {
+        queryClient.setQueryData(keys.detail(data.id), result);
         invalidate();
-        options?.onSuccess?.(result, { id, data: result.data }, ...args);
+        options?.onSuccess?.(result, data, ...args);
       },
       ...options,
     });

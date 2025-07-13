@@ -2,6 +2,8 @@
 
 Modern user management interface built for Evreka's technical assessment with React, TypeScript, and advanced UI components.
 
+![Akış Diyagramı](./diagram.png)
+
 ## ✨ Features
 
 - **5,000+ Users** with Table/Card view toggle

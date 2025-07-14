@@ -8,8 +8,10 @@ interface PaginationProps {
   totalPages: number;
   totalItems: number;
   itemsPerPage: number;
+  perPageOptions?: number[];
   onPrevious: () => void;
   onNext: () => void;
+  onPerPageChange?: (perPage: number) => void;
 }
 
 const PaginationContainer = styled.div`
@@ -153,13 +155,51 @@ const InfoBadge = styled.div`
   border-radius: 9999px;
 `;
 
+const PerPageSelect = styled.select`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f9fafb;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 12px;
+  padding-right: 28px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #374151;
+    background: #e5e7eb;
+  }
+
+  &:focus {
+    outline: none;
+    color: #374151;
+    background: #e5e7eb;
+  }
+
+  option {
+    background: white;
+    color: #374151;
+  }
+`;
+
 export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   totalItems,
   itemsPerPage,
+  perPageOptions = [10, 20, 50, 100],
   onPrevious,
   onNext,
+  onPerPageChange,
 }) => {
   const pagination = getPagination({
     page: currentPage,
@@ -167,6 +207,11 @@ export const Pagination: React.FC<PaginationProps> = ({
     total: totalItems,
     maxVisible: 7,
   });
+
+  const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newPerPage = Number.parseInt(e.target.value);
+    onPerPageChange?.(newPerPage);
+  };
 
   return (
     <PaginationContainer>
@@ -189,11 +234,28 @@ export const Pagination: React.FC<PaginationProps> = ({
               items
             </div>
 
-            <div className="hidden sm:block">
+            <div className="hidden sm:flex items-center gap-3">
               <InfoBadge>
                 <Icon name="DocumentTextIcon" className="size-3" />
                 Page {currentPage} of {totalPages}
               </InfoBadge>
+
+              {onPerPageChange && (
+                <InfoBadge>
+                  <Icon name="RectangleStackIcon" className="size-3" />
+                  <PerPageSelect
+                    value={itemsPerPage}
+                    onChange={handlePerPageChange}
+                  >
+                    {perPageOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </PerPageSelect>
+                  per page
+                </InfoBadge>
+              )}
             </div>
           </div>
 
@@ -262,7 +324,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         </div>
 
         {/* Mobile page info */}
-        <div className="md:hidden mt-3 flex items-center justify-center">
+        <div className="md:hidden mt-3 flex items-center justify-center gap-3">
           <InfoBadge>
             <Icon name="DocumentTextIcon" className="size-3" />
             <span>
@@ -271,6 +333,23 @@ export const Pagination: React.FC<PaginationProps> = ({
             <span>•</span>
             <span>{totalItems.toLocaleString()} total</span>
           </InfoBadge>
+
+          {onPerPageChange && (
+            <InfoBadge>
+              <Icon name="RectangleStackIcon" className="size-3" />
+              <PerPageSelect
+                value={itemsPerPage}
+                onChange={handlePerPageChange}
+              >
+                {perPageOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </PerPageSelect>
+              per page
+            </InfoBadge>
+          )}
         </div>
       </div>
     </PaginationContainer>

@@ -11,7 +11,7 @@ interface UseApiTableConfig<T extends BaseEntity> {
   columns: TableColumn<T>[];
   actions?: TableAction<T>[];
   defaultViewMode?: ViewMode;
-  pageSize?: number;
+  defaultPageSize?: number;
   baseFilters?: Record<string, unknown>;
 }
 
@@ -20,7 +20,7 @@ export function useApiTable<T extends BaseEntity>({
   columns,
   actions = [],
   defaultViewMode = "table",
-  pageSize = 25,
+  defaultPageSize = 25,
   baseFilters = {},
 }: UseApiTableConfig<T>) {
   const apiHook = api();
@@ -31,6 +31,7 @@ export function useApiTable<T extends BaseEntity>({
   const [sortBy, setSortBy] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
   const [isPaginated, setIsPaginated] = useState(true);
   const [filters, setFilters] = useState<Filter<T>>({});
 
@@ -83,6 +84,11 @@ export function useApiTable<T extends BaseEntity>({
     },
     [sortBy, sortOrder]
   );
+
+  const handlePageSizeChange = useCallback((newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+  }, []);
 
   const updateFilter = useCallback((key: string, value: unknown) => {
     setFilters((prev) => {
@@ -141,12 +147,13 @@ export function useApiTable<T extends BaseEntity>({
     return {
       total,
       showing,
+      perPage: pageSize,
       currentPage: apiPage,
       totalPages,
       hasNextPage: apiPage < totalPages,
       hasPrevPage: apiPage > 1,
     };
-  }, [response, currentPage]);
+  }, [response, currentPage, pageSize]);
 
   // Actions
   const actions_obj = {
@@ -154,6 +161,7 @@ export function useApiTable<T extends BaseEntity>({
     setSearch,
     setIsPaginated,
     setCurrentPage,
+    setPageSize: handlePageSizeChange,
     updateFilter,
     clearFilters,
     nextPage: () =>
@@ -168,6 +176,7 @@ export function useApiTable<T extends BaseEntity>({
     sortBy,
     sortOrder,
     currentPage,
+    pageSize,
     isPaginated,
     filters,
     isLoading,

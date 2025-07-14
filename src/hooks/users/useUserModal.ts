@@ -9,18 +9,6 @@ type ModalState = {
   user: User | null;
 };
 
-function createModalActions(
-  setState: React.Dispatch<React.SetStateAction<ModalState>>
-) {
-  return {
-    openCreateModal: () =>
-      setState({ isOpen: true, mode: "create", user: null }),
-    openEditModal: (user: User) =>
-      setState({ isOpen: true, mode: "edit", user }),
-    closeModal: () => setState({ isOpen: false, mode: "create", user: null }),
-  };
-}
-
 export const useUserModal = () => {
   const usersApi = useUsersApi();
   const [modalState, setModalState] = useState<ModalState>({
@@ -54,6 +42,19 @@ export const useUserModal = () => {
     handleSubmit,
   };
 };
+
+// Modal actions
+function createModalActions(
+  setState: React.Dispatch<React.SetStateAction<ModalState>>
+) {
+  return {
+    openCreateModal: () =>
+      setState({ isOpen: true, mode: "create", user: null }),
+    openEditModal: (user: User) =>
+      setState({ isOpen: true, mode: "edit", user }),
+    closeModal: () => setState({ isOpen: false, mode: "create", user: null }),
+  };
+}
 
 // URL sync
 function useModalUrlSync(isOpen: boolean, mode: string, onRestore: () => void) {

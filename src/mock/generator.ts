@@ -208,14 +208,16 @@ export class MockServer<T extends BaseEntity> {
           if (!existing) {
             return HttpResponse.json({ error: "Not found" }, { status: 404 });
           }
+          const prevData = this.deserializeDates(existing);
 
           const bodyText = await request.text();
           const body = JSON.parse(bodyText);
+
           const updated = {
-            ...(existing as Record<string, any>),
+            ...(prevData as Record<string, any>),
             ...(body as Record<string, any>),
             id,
-            createdAt: existing.createdAt, // Keep original createdAt
+            createdAt: prevData.createdAt, // Keep original createdAt
             updatedAt: new Date(),
           } as T;
 

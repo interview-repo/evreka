@@ -53,4 +53,5 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 3500, // Mock vendor için limit artır
   },
+  appType: 'spa'
 })

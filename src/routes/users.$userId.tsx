@@ -1,8 +1,13 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import useUsersApi, { usersApi } from "@/api/client";
+import {
+  createFileRoute,
+  getRouteApi,
+  useNavigate,
+} from "@tanstack/react-router";
+import { usersApi } from "@/api/client";
 import { UserDetailPage } from "@/components/user/detail";
 import { ActionButton } from "@/components/shared/button";
 import { Icon } from "@/components/shared/Icon";
+import { Loading } from "@/components/shared/loading";
 import {
   UserModalProvider,
   useUserModalContext,
@@ -19,20 +24,33 @@ export const Route = createFileRoute("/users/$userId")({
     const { queryClient } = context;
     const { userId } = params;
 
-    await queryClient.ensureQueryData({
+    return await queryClient.ensureQueryData({
       queryKey: ["users", userId],
       queryFn: () => usersApi.get(userId),
       staleTime: 10 * 60 * 1000,
     });
   },
+  pendingComponent: () => <Loading message="Loading user details..." />,
+  errorComponent: ({ error, reset }) => (
+    <Layout
+      title="Error"
+      description="Failed to load user"
+      error={error}
+      onRetry={reset}
+    >
+      <div className="text-center py-8">
+        <p className="text-red-600 mb-4">Failed to load user details</p>
+        <ActionButton onClick={reset}>Try Again</ActionButton>
+      </div>
+    </Layout>
+  ),
 });
+
+const routeApi = getRouteApi("/users/$userId");
 
 function UserDetail() {
   const navigate = useNavigate();
-  const { userId } = Route.useParams();
-  const usersApi = useUsersApi();
-
-  const { data: userResponse, isLoading, error } = usersApi.useDetail(userId);
+  const { data: user } = routeApi.useLoaderData();
   const userModal = useUserModalContext();
 
   const handleGoBack = () => {
@@ -41,10 +59,8 @@ function UserDetail() {
 
   return (
     <Layout
-      title={`User: ${userResponse?.data?.name || "Loading..."}`}
+      title={`User: ${user.name}`}
       description="User details and management"
-      error={error}
-      onRetry={() => window.location.reload()}
       actionButton={
         <ActionButton onClick={handleGoBack}>
           <Icon name="ArrowLeftIcon" />
@@ -53,9 +69,8 @@ function UserDetail() {
       }
     >
       <UserDetailPage
-        user={userResponse?.data}
-        isLoading={isLoading}
-        error={error}
+        user={user}
+        isLoading={false}
         onBack={handleGoBack}
         onEdit={userModal.openEditModal}
       />

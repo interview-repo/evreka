@@ -25,7 +25,7 @@ export const Route = createFileRoute("/users/$userId")({
     const { userId } = params;
 
     return await queryClient.ensureQueryData({
-      queryKey: ["users", userId],
+      queryKey: ["users", "detail", userId],
       queryFn: () => usersApi.get(userId),
       staleTime: 10 * 60 * 1000,
     });

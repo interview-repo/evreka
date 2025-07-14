@@ -9,73 +9,59 @@ type ModalState = {
   user: User | null;
 };
 
+function createModalActions(
+  setState: React.Dispatch<React.SetStateAction<ModalState>>
+) {
+  return {
+    openCreateModal: () =>
+      setState({ isOpen: true, mode: "create", user: null }),
+    openEditModal: (user: User) =>
+      setState({ isOpen: true, mode: "edit", user }),
+    closeModal: () => setState({ isOpen: false, mode: "create", user: null }),
+  };
+}
+
 export const useUserModal = () => {
   const usersApi = useUsersApi();
-
-  // API mutations
-  const createMutation = usersApi.useCreate();
-  const updateMutation = usersApi.useUpdate();
-
-  // Modal state
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
     mode: "create",
     user: null,
   });
 
-  // Modal actions
-  const openCreateModal = useCallback(() => {
-    setModalState({ isOpen: true, mode: "create", user: null });
-  }, []);
+  const actions = createModalActions(setModalState);
 
-  const openEditModal = useCallback((user: User) => {
-    setModalState({ isOpen: true, mode: "edit", user });
-  }, []);
+  const createMutation = usersApi.useCreate();
+  const updateMutation = usersApi.useUpdate();
 
-  const closeModal = useCallback(() => {
-    setModalState({ isOpen: false, mode: "create", user: null });
-  }, []);
-
-  useModalUrlSync(modalState.isOpen, modalState.mode, openCreateModal);
+  // URL sync
+  useModalUrlSync(modalState.isOpen, modalState.mode, actions.openCreateModal);
 
   // Submit handler
   const handleSubmit = useCallback(
     async (data: any) => {
-      try {
-        if ("id" in data) {
-          await updateMutation.mutateAsync(data);
-        } else {
-          await createMutation.mutateAsync(data);
-        }
-        closeModal();
-      } catch (error) {
-        throw error;
-      }
+      const mutation = "id" in data ? updateMutation : createMutation;
+      await mutation.mutateAsync(data);
+      actions.closeModal();
     },
-    [createMutation, updateMutation, closeModal]
+    [createMutation, updateMutation, actions.closeModal]
   );
 
   return {
-    // State
     modalState,
     isSubmitting: createMutation.isPending || updateMutation.isPending,
-
-    // Actions
-    openCreateModal,
-    openEditModal,
-    closeModal,
+    ...actions,
     handleSubmit,
   };
 };
 
+// URL sync
 function useModalUrlSync(isOpen: boolean, mode: string, onRestore: () => void) {
   const { setUrlParam, removeUrlParam, getUrlParam } = useUrlState();
 
   useEffect(() => {
     const modal = getUrlParam("modal");
-    if (modal === "create") {
-      onRestore();
-    }
+    if (modal === "create") onRestore();
   }, []);
 
   useEffect(() => {
@@ -85,9 +71,4 @@ function useModalUrlSync(isOpen: boolean, mode: string, onRestore: () => void) {
       removeUrlParam("modal");
     }
   }, [isOpen, mode, setUrlParam, removeUrlParam]);
-
-  return {
-    setUrlParam,
-    removeUrlParam,
-  };
 }

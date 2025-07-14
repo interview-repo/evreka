@@ -25,13 +25,6 @@ export class Storage<T = any> {
 
       const parsed = JSON.parse(item);
 
-      if (parsed.createdAt && typeof parsed.createdAt === "string") {
-        parsed.createdAt = new Date(parsed.createdAt);
-      }
-      if (parsed.updatedAt && typeof parsed.updatedAt === "string") {
-        parsed.updatedAt = new Date(parsed.updatedAt);
-      }
-
       return parsed;
     } catch {
       return null;

@@ -42,6 +42,19 @@ export class MockServer<T extends BaseEntity> {
     }
   }
 
+  private deserializeDates = (item: T): T => {
+    const deserialized = { ...item };
+
+    if (typeof deserialized.createdAt === "string") {
+      deserialized.createdAt = new Date(deserialized.createdAt);
+    }
+    if (typeof deserialized.updatedAt === "string") {
+      deserialized.updatedAt = new Date(deserialized.updatedAt);
+    }
+
+    return deserialized;
+  };
+
   private filter(items: T[], filter: Filter<T>): T[] {
     let result = items;
 
@@ -71,10 +84,20 @@ export class MockServer<T extends BaseEntity> {
     // Sorting
     if (filter._sort) {
       const order = filter._order || "asc";
+      const sortField = filter._sort;
+
       result.sort((a, b) => {
-        const aVal = (a as any)[filter._sort!];
-        const bVal = (b as any)[filter._sort!];
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        const aVal = (a as any)[sortField];
+        const bVal = (b as any)[sortField];
+
+        let aCompare = aVal;
+        let bCompare = bVal;
+
+        if (aVal instanceof Date) aCompare = aVal.getTime();
+        if (bVal instanceof Date) bCompare = bVal.getTime();
+
+        const comparison =
+          aCompare < bCompare ? -1 : aCompare > bCompare ? 1 : 0;
         return order === "desc" ? -comparison : comparison;
       });
     }
@@ -122,7 +145,9 @@ export class MockServer<T extends BaseEntity> {
       // GET /{path}
       http.get(basePath, async ({ request }) => {
         const filter = this.parseQuery(request.url);
-        const items = Object.values(this.storage.getAll());
+        const items = Object.values(this.storage.getAll()).map(
+          this.deserializeDates
+        );
         const filtered = this.filter(items, filter);
 
         if (filter._all) {
@@ -145,7 +170,7 @@ export class MockServer<T extends BaseEntity> {
       http.get(`${basePath}/:id`, ({ params }) => {
         const item = this.storage.get(params.id as string);
         return item
-          ? HttpResponse.json({ data: item })
+          ? HttpResponse.json({ data: this.deserializeDates(item) })
           : HttpResponse.json({ error: "Not found" }, { status: 404 });
       }),
 

@@ -35,7 +35,6 @@ export const useUsersTable = ({
     api: useUsersApi,
     columns: userTableColumns,
     actions,
-    pageSize: 25,
     baseFilters: {
       _sort: "createdAt",
       _order: "desc",

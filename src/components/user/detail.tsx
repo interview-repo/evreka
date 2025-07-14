@@ -1,4 +1,3 @@
-import React from "react";
 import styled, { keyframes, css } from "styled-components";
 import type { User } from "@/types/user";
 import { Icon } from "../shared/Icon";
@@ -37,151 +36,13 @@ const float = keyframes`
 
 // Styled Components
 const PageContainer = styled.div`
-  min-height: 100vh;
+  min-height: 100%;
   background: linear-gradient(
     to bottom right,
     #f8fafc,
     rgba(219, 234, 254, 0.3),
     rgba(224, 231, 255, 0.5)
   );
-`;
-
-const StickyHeader = styled.div`
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
-`;
-
-const HeaderContent = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px;
-`;
-
-const HeaderLeft = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
-
-const BackButton = styled.button`
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(229, 231, 235, 0.6);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: white;
-    border-color: #d1d5db;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    background: linear-gradient(
-      to right,
-      rgba(37, 99, 235, 0.2),
-      rgba(99, 102, 241, 0.2)
-    );
-    border-radius: 12px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: #4b5563;
-    transition: color 0.3s ease;
-  }
-
-  &:hover svg {
-    color: #1f2937;
-  }
-`;
-
-const UserInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const UserNameRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const UserName = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  background: linear-gradient(to right, #111827, #1f2937, #374151);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
-const StatusBadge = styled.div<{ $active: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
-
-  ${({ $active }) =>
-    $active
-      ? `
-        background: #ecfdf5;
-        color: #059669;
-        border: 1px solid #a7f3d0;
-      `
-      : `
-        background: #f9fafb;
-        color: #4b5563;
-        border: 1px solid #e5e7eb;
-      `}
-`;
-
-const StatusDot = styled.div<{ $active: boolean }>`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: ${({ $active }) => ($active ? "#10b981" : "#9ca3af")};
-`;
-
-const UserEmail = styled.p`
-  color: #4b5563;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  svg {
-    width: 14px;
-    height: 14px;
-  }
 `;
 
 const MainContent = styled.div`
@@ -483,30 +344,6 @@ export const UserDetailPage: React.FC<IProps> = ({
 
   return (
     <PageContainer>
-      <StickyHeader>
-        <HeaderContent>
-          <HeaderLeft>
-            <BackButton onClick={onBack}>
-              <Icon name="ArrowLeftIcon" />
-            </BackButton>
-
-            <UserInfo>
-              <UserNameRow>
-                <UserName>{user.name}</UserName>
-                <StatusBadge $active={user.active}>
-                  <StatusDot $active={user.active} />
-                  {user.active ? "Active" : "Inactive"}
-                </StatusBadge>
-              </UserNameRow>
-              <UserEmail>
-                <Icon name="EnvelopeIcon" />
-                {user.email}
-              </UserEmail>
-            </UserInfo>
-          </HeaderLeft>
-        </HeaderContent>
-      </StickyHeader>
-
       <MainContent>
         <GridContainer>
           <ProfileSection>

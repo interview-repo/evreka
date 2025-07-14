@@ -3,57 +3,44 @@ import { useUsersList } from "@/hooks/users/useUsersList";
 import { ControlPanel } from "@/components/shared/control-panel";
 import { ContentArea } from "@/components/shared/content";
 import { Pagination } from "@/components/table/pagination";
-import { Header } from "@/components/shared/header";
 import { Icon } from "@/components/shared/Icon";
 import { ActionButton } from "@/components/shared/button";
-import { UserModal } from "@/components/user/modal";
-import { useUserModal } from "@/hooks/users/useUserModal";
+import {
+  UserModalProvider,
+  useUserModalContext,
+} from "@/contexts/UserModalContext";
+import { Layout } from "@/layout";
 
 export const Route = createFileRoute("/")({
-  component: UsersPage,
+  component: () => (
+    <UserModalProvider>
+      <UsersPage />
+    </UserModalProvider>
+  ),
 });
 
-export default function UsersPage() {
+function UsersPage() {
   const { table, filters, renderGrid, hasActiveFilters, handleClearFilters } =
     useUsersList();
 
-  const userModal = useUserModal();
-
-  // Error state
-  if (table.state.error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
-          <div className="text-red-500 text-xl mb-4">Error Loading Users</div>
-          <div className="text-gray-600 mb-4">{table.state.error.message}</div>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const userModal = useUserModalContext();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-indigo-100">
-      <Header
-        title="Users CRM"
-        description="Manage your team and their roles"
-        actionButton={
-          <ActionButton
-            onClick={userModal.openCreateModal}
-            disabled={userModal.isSubmitting}
-          >
-            <Icon name="PlusIcon" />
-            Add User
-          </ActionButton>
-        }
-      />
-
-      {/* Control Panel */}
+    <Layout
+      title="Users CRM"
+      description="Manage your team and their roles"
+      error={table.state.error}
+      onRetry={() => window.location.reload()}
+      actionButton={
+        <ActionButton
+          onClick={userModal.openCreateModal}
+          disabled={userModal.isSubmitting}
+        >
+          <Icon name="PlusIcon" />
+          Add User
+        </ActionButton>
+      }
+    >
       <ControlPanel
         search={table.state.search}
         onSearchChange={table.actions.setSearch}
@@ -88,20 +75,12 @@ export default function UsersPage() {
           currentPage={table.state.currentPage}
           totalPages={table.data.stats.totalPages}
           totalItems={table.data.stats.total}
-          itemsPerPage={table.data.stats.showing}
+          itemsPerPage={table.data.stats.perPage}
           onPrevious={table.actions.prevPage}
           onNext={table.actions.nextPage}
+          onPerPageChange={table.actions.setPageSize}
         />
       )}
-
-      <UserModal
-        isOpen={userModal.modalState.isOpen}
-        mode={userModal.modalState.mode}
-        user={userModal.modalState.user}
-        onClose={userModal.closeModal}
-        onSubmit={userModal.handleSubmit}
-        isLoading={userModal.isSubmitting}
-      />
-    </div>
+    </Layout>
   );
 }

@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { type User } from "@/types/user";
 import useUsersApi from "@/api/client";
+import { useUrlState } from "../shared/useUrlState";
 
 type ModalState = {
   isOpen: boolean;
@@ -35,6 +36,8 @@ export const useUserModal = () => {
     setModalState({ isOpen: false, mode: "create", user: null });
   }, []);
 
+  useModalUrlSync(modalState.isOpen, modalState.mode, openCreateModal);
+
   // Submit handler
   const handleSubmit = useCallback(
     async (data: any) => {
@@ -64,3 +67,27 @@ export const useUserModal = () => {
     handleSubmit,
   };
 };
+
+function useModalUrlSync(isOpen: boolean, mode: string, onRestore: () => void) {
+  const { setUrlParam, removeUrlParam, getUrlParam } = useUrlState();
+
+  useEffect(() => {
+    const modal = getUrlParam("modal");
+    if (modal === "create") {
+      onRestore();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && mode === "create") {
+      setUrlParam("modal", "create");
+    } else if (!isOpen) {
+      removeUrlParam("modal");
+    }
+  }, [isOpen, mode, setUrlParam, removeUrlParam]);
+
+  return {
+    setUrlParam,
+    removeUrlParam,
+  };
+}
